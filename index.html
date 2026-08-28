@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الفصل الدراسي الثاني | Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    *:focus, *:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متدرجة سائلة حية (Apple Mesh Gradient) */
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.25) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.2) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.18) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* تأثير الزجاج الشفاف الفائق (Liquid Glass) */
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .ios-glass-card:active {
+      transform: scale(0.98);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: scale(1.02);
+    }
+
+    .ios-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* شريط التمرير */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <!-- خلفية الألوان الانسيابية -->
+  <div class="ios-mesh-bg"></div>
+
+  <!-- حاوية الإشعارات -->
+  <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-18 py-3 flex items-center justify-between">
+      
+      <!-- الشعار وهوية الكلية -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-600/40 border border-white/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md">
+          <i class="fa-solid fa-graduation-cap text-lg text-cyan-300"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+              Engineer Hub
+            </span>
+            <span class="text-[10px] bg-white/10 text-cyan-300 border border-white/20 px-2 py-0.5 rounded-full font-bold">2026</span>
+          </div>
+          <p class="text-[11px] text-slate-400">بوابة كلية الهندسة</p>
+        </div>
+      </div>
+
+      <!-- الإجراءات -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="showToast('🔔 لديك 3 إعلانات أكاديمية جديدة')" class="p-2.5 rounded-full ios-btn text-slate-200">
+          <i class="fa-regular fa-bell text-sm"></i>
+        </button>
+        
+        <button onclick="toggleModal('login-modal')" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500/80 to-blue-600/80 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 border border-white/30 transition flex items-center gap-2">
+          <i class="fa-solid fa-user text-xs"></i>
+          <span>حساب الطالب</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT (مربع الفصل الدراسي الثاني فقط) ================= -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-12 space-y-8 w-full my-auto">
+
+    <!-- HERO DASHBOARD WIDGET -->
+    <section class="ios-glass rounded-[36px] p-6 lg:p-12 border border-white/20 relative overflow-hidden shadow-2xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- القسم النصي والأزرار -->
+        <div class="lg:col-span-8 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-cyan-300 text-xs font-bold shadow-inner">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            الفصل الدراسي الثاني • مباشر
+          </div>
+          <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+            مرحباً بك في المنظومة الهندسية <br>
+            <span class="bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 bg-clip-text text-transparent">
+              تصفح المحاضرات، الجداول، وتابع معدلك
+            </span>
+          </h2>
+          <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl leading-relaxed">
+            المنصة المركزية الموحدة لرفع وتحميل المحاضرات والسكاشن، حساب الـ GPA، وتصفح خطط الأقسام الهندسية بسهولة وسرعة.
+          </p>
+
+          <div class="pt-2 flex flex-wrap gap-3">
+            <a href="تصفح المحاضرات.html" class="px-6 py-3 rounded-full bg-white text-slate-900 font-bold text-xs flex items-center gap-2 hover:bg-slate-100 transition shadow-lg shadow-white/10">
+              <i class="fa-solid fa-folder-open text-cyan-600"></i> تصفح المحاضرات
+            </a>
+            <a href="GPA.html" class="px-6 py-3 rounded-full ios-btn text-white font-bold text-xs flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-cyan-300"></i> حاسبة المعدل الفصلي
+            </a>
+          </div>
+        </div>
+
+        <!-- الإحصائيات الجانبية -->
+        <div class="lg:col-span-4 grid grid-cols-2 gap-3.5">
+          <div class="ios-glass-card p-5 rounded-2xl text-center">
+            <i class="fa-solid fa-book-bookmark text-cyan-400 text-xl mb-1.5"></i>
+            <h4 class="text-2xl font-extrabold text-white">_</h4>
+            <p class="text-[11px] text-slate-400">محاضرة ومذكرة</p>
+          </div>
+          <div class="ios-glass-card p-5 rounded-2xl text-center">
+            <i class="fa-solid fa-cubes text-purple-400 text-xl mb-1.5"></i>
+            <h4 class="text-2xl font-extrabold text-white">6</h4>
+            <p class="text-[11px] text-slate-400">أقسام تخصصية</p>
+          </div>
+          <div class="ios-glass-card p-5 rounded-2xl text-center">
+            <i class="fa-solid fa-users text-emerald-400 text-xl mb-1.5"></i>
+            <h4 class="text-2xl font-extrabold text-white">_</h4>
+            <p class="text-[11px] text-slate-400">طالب نشط</p>
+          </div>
+          <div class="ios-glass-card p-5 rounded-2xl text-center">
+            <i class="fa-solid fa-bolt text-amber-400 text-xl mb-1.5"></i>
+            <h4 class="text-2xl font-extrabold text-emerald-400">100%</h4>
+            <p class="text-[11px] text-slate-400">تحديث يومي</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= LOGIN MODAL ================= -->
+  <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="ios-glass max-w-md w-full rounded-[32px] p-8 relative border border-white/30 shadow-2xl">
+      <button onclick="toggleModal('login-modal')" class="absolute top-6 left-6 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-500/30 border border-white/20 text-cyan-300 flex items-center justify-center mx-auto mb-3 text-2xl shadow-lg">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h4 class="text-xl font-bold text-white">تسجيل الدخول الأكاديمي</h4>
+        <p class="text-xs text-slate-400 mt-1">أدخل الكود الجامعي وكلمة المرور للوصول لحسابك</p>
+      </div>
+
+      <form onsubmit="handleUserLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-slate-300 font-semibold mb-1">الرقم الجامعي</label>
+          <input type="text" required placeholder="مثال: 20261084" class="w-full bg-white/[0.07] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 font-semibold mb-1">كلمة المرور</label>
+          <input type="password" required placeholder="••••••••" class="w-full bg-white/[0.07] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-cyan-500/25 transition">
+          دخول إلى الحساب 🚀
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i class="fa-solid fa-atom text-cyan-400 text-base"></i>
+      <span class="font-bold text-white">كلية الهندسة • جامعة قنا</span>
+    </div>
+    <p class="text-[11px] text-slate-500"></p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function handleUserLogin(e) {
+      e.preventDefault();
+      toggleModal('login-modal');
+      showToast('🎉 مرحباً بك! تم تسجيل الدخول بنجاح إلى البوابة الأكاديمية.');
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'ios-glass px-4 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2.5 shadow-2xl border border-white/25 transition-all duration-300';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-cyan-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

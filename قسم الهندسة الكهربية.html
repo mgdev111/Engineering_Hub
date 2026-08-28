@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الهندسة الكهربية | ⚡ Electrical - Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    *:focus, *:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متدرجة سائلة حية (Apple Mesh Gradient) */
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.2) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(234, 179, 8, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.18) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* تأثير الزجاج الشفاف الفائق (Liquid Glass) */
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(245, 158, 11, 0.45);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .ios-glass-card:active {
+      transform: scale(0.98);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: scale(1.02);
+    }
+
+    .ios-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* شريط التمرير */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <!-- خلفية الألوان الانسيابية -->
+  <div class="ios-mesh-bg"></div>
+
+  <!-- حاوية الإشعارات -->
+  <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-18 py-3 flex items-center justify-between">
+      
+      <!-- الشعار وهوية القسم -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500/30 to-yellow-500/40 border border-white/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md hover:scale-105 transition">
+          <i class="fa-solid fa-bolt text-lg text-amber-300"></i>
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-amber-300 bg-clip-text text-transparent">
+              قسم الهندسة الكهربية
+            </span>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">EE</span>
+          </div>
+          <p class="text-[11px] text-slate-400">⚡ Electrical Portal • الخطة الدراسية المعتمدة</p>
+        </div>
+      </div>
+
+      <!-- الإجراءات -->
+      <div class="flex items-center gap-2.5">
+        <a href="departments.html" class="px-4 py-2 rounded-full ios-btn text-slate-200 hover:text-white text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+          <span class="hidden sm:inline">كل الأقسام</span>
+        </a>
+
+        <button onclick="toggleModal('login-modal')" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/80 to-yellow-500/80 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 border border-white/30 transition flex items-center gap-2">
+          <i class="fa-solid fa-user text-xs"></i>
+          <span>حساب الطالب</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full">
+
+    <!-- HERO HEADER: ELECTRICAL BANNER -->
+    <section class="ios-glass rounded-[36px] p-6 lg:p-10 border border-white/20 relative overflow-hidden shadow-2xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-8 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/20 text-amber-300 text-xs font-bold">
+            <i class="fa-solid fa-plug-circle-bolt text-amber-400"></i>
+            بوابة مهندسي القوى والكهرباء • ⚡ Electrical
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+            الخطة الدراسية والمقررات <br>
+            <span class="bg-gradient-to-r from-amber-300 via-yellow-200 to-cyan-300 bg-clip-text text-transparent">
+              مقسمة ترم أول وترم ثاني لكل المستويات
+            </span>
+          </h2>
+          <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl leading-relaxed">
+            اضغط على المستوى الأكاديمي لعرض مقررات الفصل الدراسي الأول والفصل الدراسي الثاني، بالإضافة للأكواد الرسمية مع إمكانية الوصول إلى الشيتات والمحاضرات.
+          </p>
+        </div>
+
+        <!-- إحصائيات سريعة للقسم -->
+        <div class="lg:col-span-4 grid grid-cols-2 gap-3">
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-layer-group text-amber-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-white">4</h4>
+            <p class="text-[10px] text-slate-400">مستويات دراسية</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-book-open text-cyan-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-white">48</h4>
+            <p class="text-[10px] text-slate-400">مقرر دراسي باللائحة</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-calendar-week text-emerald-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-emerald-400">ترم 1 و 2</h4>
+            <p class="text-[10px] text-slate-400">توزيع فصلي معتمد</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-bolt text-amber-300 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-white">2026</h4>
+            <p class="text-[10px] text-slate-400">تحديثات اللائحة</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= كروت المستويات (100، 200، 300، 400) ================= -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-cubes-stacked text-amber-400"></i> اختر المستوى الأكاديمي
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">اضغط على أي مستوى لعرض مقررات الترم الأول والترم الثاني</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="level-cards-container">
+        
+        <!-- مستوى 100 -->
+        <div onclick="selectLevel('100')" id="lvl-card-100" class="level-card ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border-2 border-amber-400/50 shadow-lg shadow-amber-500/10 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-amber-300 font-mono font-black text-sm">100</span>
+            <span class="text-[10px] bg-amber-400/10 text-amber-300 border border-amber-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 100</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-amber-300 transition">مستوى 100</h4>
+          <p class="text-[11px] text-slate-400 mt-1">12 مقرر • (ترم أول + ترم ثاني)</p>
+        </div>
+
+        <!-- مستوى 200 -->
+        <div onclick="selectLevel('200')" id="lvl-card-200" class="level-card ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-white/15 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-cyan-300 font-mono font-black text-sm">200</span>
+            <span class="text-[10px] bg-cyan-400/10 text-cyan-300 border border-cyan-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 200</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-cyan-300 transition">مستوى 200</h4>
+          <p class="text-[11px] text-slate-400 mt-1">12 مقرر • (ترم أول + ترم ثاني)</p>
+        </div>
+
+        <!-- مستوى 300 -->
+        <div onclick="selectLevel('300')" id="lvl-card-300" class="level-card ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-white/15 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-purple-300 font-mono font-black text-sm">300</span>
+            <span class="text-[10px] bg-purple-400/10 text-purple-300 border border-purple-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 300</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-purple-300 transition">مستوى 300</h4>
+          <p class="text-[11px] text-slate-400 mt-1">12 مقرر • (ترم أول + ترم ثاني)</p>
+        </div>
+
+        <!-- مستوى 400 -->
+        <div onclick="selectLevel('400')" id="lvl-card-400" class="level-card ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-white/15 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-300 font-mono font-black text-sm">400</span>
+            <span class="text-[10px] bg-emerald-400/10 text-emerald-300 border border-emerald-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 400</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-emerald-300 transition">مستوى 400</h4>
+          <p class="text-[11px] text-slate-400 mt-1">12 مقرر • (ترم أول + ترم ثاني + مشروع التخرج)</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= SECTION: تقسيم الترم الأول والترم الثاني للمستوى المختار ================= -->
+    <section id="semesters-section" class="space-y-6 pt-2">
+      
+      <!-- شريط العنوان والبحث -->
+      <div class="ios-glass rounded-[26px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/20">
+        <div>
+          <h3 id="current-level-heading" class="text-xl font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-amber-400"></i> مواد مستوى 100
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">جدول المقررات المعتمدة مقسمة حسب الفصل الدراسي</p>
+        </div>
+
+        <!-- محرك البحث -->
+        <div class="relative w-full md:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute right-4 top-3 text-slate-400 text-xs"></i>
+          <input 
+            id="subject-search-input" 
+            type="text" 
+            placeholder="ابحث عن مادة أو كود (مثال: EPE111)..." 
+            class="w-full bg-white/[0.07] border border-white/15 rounded-full pr-10 pl-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400/50"
+          >
+        </div>
+      </div>
+
+      <!-- الحاويتان (ترم أول - الصف الشمال | ترم ثاني - الصف اليمين) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- ================= العمود 1: الفصل الدراسي الأول (الصف الشمال في الصورة) ================= -->
+        <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-amber-400/30 bg-gradient-to-b from-amber-500/[0.08] to-transparent shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 font-bold text-sm shadow">
+                1
+              </div>
+              <div>
+                <h4 class="text-base font-black text-white">الفصل الدراسي الأول</h4>
+                <p class="text-[11px] text-slate-400">الصف الشمال في اللائحة</p>
+              </div>
+            </div>
+            <span id="count-term1" class="text-[10px] font-bold bg-white/10 text-amber-300 px-3 py-1 rounded-full border border-white/15">6 مواد</span>
+          </div>
+
+          <!-- قائمة مواد الترم الأول -->
+          <div id="term1-container" class="space-y-3">
+            <!-- تملأ ديناميكياً عبر JS -->
+          </div>
+        </div>
+
+        <!-- ================= العمود 2: الفصل الدراسي الثاني (الصف اليمين في الصورة) ================= -->
+        <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-yellow-500/30 bg-gradient-to-b from-yellow-600/[0.08] to-transparent shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-yellow-500/20 border border-yellow-400/30 flex items-center justify-center text-yellow-300 font-bold text-sm shadow">
+                2
+              </div>
+              <div>
+                <h4 class="text-base font-black text-white">الفصل الدراسي الثاني</h4>
+                <p class="text-[11px] text-slate-400">الصف اليمين في اللائحة</p>
+              </div>
+            </div>
+            <span id="count-term2" class="text-[10px] font-bold bg-white/10 text-yellow-300 px-3 py-1 rounded-full border border-white/15">6 مواد</span>
+          </div>
+
+          <!-- قائمة مواد الترم الثاني -->
+          <div id="term2-container" class="space-y-3">
+            <!-- تملأ ديناميكياً عبر JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= LOGIN MODAL ================= -->
+  <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="ios-glass max-w-md w-full rounded-[32px] p-8 relative border border-white/30 shadow-2xl">
+      <button onclick="toggleModal('login-modal')" class="absolute top-6 left-6 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500/30 to-yellow-500/30 border border-white/20 text-amber-300 flex items-center justify-center mx-auto mb-3 text-2xl shadow-lg">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h4 class="text-xl font-bold text-white">تسجيل الدخول الأكاديمي</h4>
+        <p class="text-xs text-slate-400 mt-1">أدخل الكود الجامعي للوصول لمواد قسم الهندسة الكهربية</p>
+      </div>
+
+      <form onsubmit="handleUserLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-slate-300 font-semibold mb-1">الرقم الجامعي</label>
+          <input type="text" required placeholder="مثال: 20261084" class="w-full bg-white/[0.07] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 font-semibold mb-1">كلمة المرور</label>
+          <input type="password" required placeholder="••••••••" class="w-full bg-white/[0.07] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-amber-500/25 transition">
+          دخول إلى الحساب 🚀
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i class="fa-solid fa-bolt text-amber-400 text-base"></i>
+      <span class="font-bold text-white">قسم الهندسة الكهربية • ⚡ Electrical</span>
+    </div>
+    <p class="text-[11px] text-slate-500">كلية الهندسة • جامعة قنا</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // ================= قاعدة البيانات المفرغة بدقة من صورة اللائحة (EE / Electrical) =================
+    // الصف الشمال = term: 1 (الفصل الدراسي الأول)
+    // الصف اليمين = term: 2 (الفصل الدراسي الثاني)
+    const elecCurriculum = {
+      
+      // ================= LEVEL 100 (مستوى 100) =================
+      '100': {
+        term1: [
+          { code: 'EPE111', name: 'الدوائر الكهربية نظرية', icon: 'fa-bolt' },
+          { code: 'MCE112', name: 'مقرر اختياري (1)', icon: 'fa-book-bookmark' },
+          { code: 'ECE113', name: 'إلكترونيات (1)', icon: 'fa-microchip' },
+          { code: 'CIE114', name: 'مقرر اختياري (2)', icon: 'fa-book-bookmark' },
+          { code: 'EPE115', name: 'خواص المواد الكهربية', icon: 'fa-atom' },
+          { code: 'UNR116', name: 'كتابة تقارير فنية', icon: 'fa-file-lines' },
+        ],
+        term2: [
+          { code: 'ENG121', name: 'تحليلات هندسية', icon: 'fa-square-root-variable' },
+          { code: 'ECE122', name: 'مجالات كهربية (1)', icon: 'fa-wave-square' },
+          { code: 'EPE123', name: 'رسم كهربي فني', icon: 'fa-pen-ruler' },
+          { code: 'EPE124', name: 'اختبارات كهربية (1)', icon: 'fa-vial' },
+          { code: 'EPE125', name: 'مقرر اختياري (3)', icon: 'fa-book-bookmark' },
+          { code: 'UNR126', name: 'حقوق الإنسان ومكافحة الفساد', icon: 'fa-scale-balanced' },
+        ]
+      },
+
+      // ================= LEVEL 200 (مستوى 200) =================
+      '200': {
+        term1: [
+          { code: 'EPE211', name: 'تحليلات هندسية متقدمة', icon: 'fa-calculator' },
+          { code: 'EPE212', name: 'آلات كهربية (1)', icon: 'fa-gears' },
+          { code: 'UNR213', name: 'أمن وسلامة مهنية', icon: 'fa-hard-hat' },
+          { code: 'ECE214', name: 'إلكترونيات (2)', icon: 'fa-microchip' },
+          { code: 'ECE215', name: 'مجالات كهربية (2)', icon: 'fa-wave-square' },
+          { code: 'ECE216', name: 'مقرر اختياري (4)', icon: 'fa-book-bookmark' },
+        ],
+        term2: [
+          { code: 'EPE221', name: 'نظرية التحكم الآلي', icon: 'fa-sliders' },
+          { code: 'EPE222', name: 'قياسات كهربية وإلكترونية', icon: 'fa-gauge-high' },
+          { code: 'EPE223', name: 'تحليلات الدوائر الكهربية', icon: 'fa-circle-nodes' },
+          { code: 'EPE224', name: 'اختبارات كهربية (2)', icon: 'fa-vial' },
+          { code: 'ECE225', name: 'نظرية اتصالات', icon: 'fa-tower-cell' },
+          { code: 'MCE226', name: 'مقرر اختياري (5)', icon: 'fa-book-bookmark' },
+        ]
+      },
+
+      // ================= LEVEL 300 (مستوى 300) =================
+      '300': {
+        term1: [
+          { code: 'EPE311', name: 'التحكم الرقمي', icon: 'fa-microchip' },
+          { code: 'EPE312', name: 'آلات كهربية (2)', icon: 'fa-gears' },
+          { code: 'EPE313', name: 'التركيبات الكهربية', icon: 'fa-plug-circle-bolt' },
+          { code: 'EPE314', name: 'نظم القوى الكهربية', icon: 'fa-network-wired' },
+          { code: 'EPE315', name: 'مقرر اختياري (6)', icon: 'fa-book-bookmark' },
+          { code: 'UNR316', name: 'القضايا المجتمعية', icon: 'fa-users' },
+        ],
+        term2: [
+          { code: 'EPE321', name: 'إلكترونيات القوى (1)', icon: 'fa-car-battery' },
+          { code: 'EPE322', name: 'المعالجات القابلة للبرمجة وتطبيقاتها (PLC)', icon: 'fa-computer' },
+          { code: 'EPE323', name: 'اختبارات كهربية (3)', icon: 'fa-vials' },
+          { code: 'UNR324', name: 'علم نفس واجتماع صناعي', icon: 'fa-brain' },
+          { code: 'ECE325', name: 'مقرر اختياري (7)', icon: 'fa-book-bookmark' },
+          { code: 'EPE326', name: 'هندسة الجهد الفائق', icon: 'fa-bolt-lightning' },
+        ]
+      },
+
+      // ================= LEVEL 400 (مستوى 400) =================
+      '400': {
+        term1: [
+          { code: 'EPE411', name: 'تحليل شبكات القوى الكهربية', icon: 'fa-diagram-project' },
+          { code: 'EPE412', name: 'آلات كهربية خاصة', icon: 'fa-gear' },
+          { code: 'EPE413', name: 'إلكترونيات القوى (2)', icon: 'fa-car-battery' },
+          { code: 'EPE414', name: 'تحويل واستخدام الطاقة', icon: 'fa-solar-panel' },
+          { code: 'EPE415', name: 'مقرر اختياري (8)', icon: 'fa-book-bookmark' },
+          { code: 'EPE416', name: 'مشروع التخرج (1)', icon: 'fa-graduation-cap' },
+        ],
+        term2: [
+          { code: 'EPE422', name: 'اختبارات كهربية (4)', icon: 'fa-vials' },
+          { code: 'EPE423', name: 'هندسة الوقاية والقطع', icon: 'fa-shield-halved' },
+          { code: 'EPE424', name: 'التحكم في نظم القوى الكهربية', icon: 'fa-sliders' },
+          { code: 'UNR425', name: 'ريادة الأعمال', icon: 'fa-chart-line' },
+          { code: 'EPE426', name: 'مقرر اختياري (9)', icon: 'fa-book-bookmark' },
+          { code: 'EPE421', name: 'مشروع التخرج (2)', icon: 'fa-award' },
+        ]
+      }
+    };
+
+    let selectedLevel = '100';
+
+    // اختيار المستوى وتحديث الواجهة
+    function selectLevel(lvl) {
+      selectedLevel = lvl;
+
+      // تحديث كروت المستويات
+      ['100', '200', '300', '400'].forEach(l => {
+        const card = document.getElementById(`lvl-card-${l}`);
+        if(l === lvl) {
+          card.className = 'level-card ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border-2 border-amber-400/50 shadow-lg shadow-amber-500/10 group';
+        } else {
+          card.className = 'level-card ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/15 group';
+        }
+      });
+
+      document.getElementById('current-level-heading').innerHTML = `<i class="fa-solid fa-graduation-cap text-amber-400"></i> مواد مستوى ${lvl}`;
+      document.getElementById('subject-search-input').value = '';
+
+      renderLevelSubjects();
+      document.getElementById('semesters-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // رسم مواد الترم الأول والترم الثاني
+    function renderLevelSubjects() {
+      const q = (document.getElementById('subject-search-input').value || '').toLowerCase().trim();
+      const data = elecCurriculum[selectedLevel];
+
+      const t1Container = document.getElementById('term1-container');
+      const t2Container = document.getElementById('term2-container');
+
+      let list1 = data.term1;
+      let list2 = data.term2;
+
+      if(q !== '') {
+        list1 = list1.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+        list2 = list2.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+      }
+
+      document.getElementById('count-term1').innerText = `${list1.length} مقرر`;
+      document.getElementById('count-term2').innerText = `${list2.length} مقرر`;
+
+      // تعبئة الترم الأول
+      if(list1.length === 0) {
+        t1Container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">لا توجد مواد مطابقة للبحث في الترم الأول.</p>`;
+      } else {
+        t1Container.innerHTML = list1.map(item => createSubjectCardHtml(item, 'term1')).join('');
+      }
+
+      // تعبئة الترم الثاني
+      if(list2.length === 0) {
+        t2Container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">لا توجد مواد مطابقة للبحث في الترم الثاني.</p>`;
+      } else {
+        t2Container.innerHTML = list2.map(item => createSubjectCardHtml(item, 'term2')).join('');
+      }
+    }
+
+    // بناء تصميم كارت المادة
+    function createSubjectCardHtml(item, term) {
+      const isTerm1 = term === 'term1';
+      const badgeBg = isTerm1 ? 'bg-amber-500/15 text-amber-300 border-amber-400/20' : 'bg-yellow-500/15 text-yellow-300 border-yellow-400/20';
+      const iconColor = isTerm1 ? 'text-amber-300' : 'text-yellow-300';
+
+      return `
+        <div class="ios-glass-card p-4 rounded-2xl flex items-center justify-between group transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center ${iconColor} text-base shadow-sm">
+              <i class="fa-solid ${item.icon}"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border ${badgeBg}">${item.code}</span>
+              </div>
+              <h5 class="text-xs sm:text-sm font-bold text-white mt-1 group-hover:text-amber-300 transition">${item.name}</h5>
+            </div>
+          </div>
+          
+          <button onclick="downloadSubjectFiles('${item.name}', '${item.code}')" class="px-3 py-2 rounded-xl ios-btn text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-cloud-arrow-down text-xs ${iconColor}"></i>
+            <span class="hidden sm:inline">تحميل</span>
+          </button>
+        </div>
+      `;
+    }
+
+    // البحث اللحظي
+    document.getElementById('subject-search-input').addEventListener('input', renderLevelSubjects);
+
+    function downloadSubjectFiles(name, code) {
+      showToast(`📥 جاري فتح ملفات ومذكرات مقرر: ${name} (${code})`);
+    }
+
+    // المودال والإشعارات
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function handleUserLogin(e) {
+      e.preventDefault();
+      toggleModal('login-modal');
+      showToast('🎉 تم تسجيل الدخول بنجاح إلى قسم الهندسة الكهربية.');
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'ios-glass px-4 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2.5 shadow-2xl border border-white/25 transition-all duration-300';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-amber-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // التهيئة المبدئية عند فتح الصفحة
+    window.onload = () => {
+      selectLevel('100');
+    };
+  </script>
+</body>
+</html>

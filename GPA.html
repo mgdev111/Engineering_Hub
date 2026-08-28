@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حاسبة المعدل التراكمي GPA | Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    *:focus, *:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متدرجة سائلة حية (Apple Mesh Gradient) */
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.25) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.2) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.18) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* تأثير الزجاج الشفاف الفائق (Liquid Glass) */
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: scale(1.02);
+    }
+
+    .ios-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* شريط التمرير */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <!-- خلفية الألوان الانسيابية -->
+  <div class="ios-mesh-bg"></div>
+
+  <!-- حاوية الإشعارات -->
+  <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-18 py-3 flex items-center justify-between">
+      
+      <!-- الشعار وهوية الموقع -->
+      <a href="index.html" class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-600/40 border border-white/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md hover:scale-105 transition">
+          <i class="fa-solid fa-calculator text-lg text-cyan-300"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+              حاسبة المعدل GPA
+            </span>
+            <span class="text-[10px] bg-white/10 text-cyan-300 border border-white/20 px-2 py-0.5 rounded-full font-bold">4.0 Scale</span>
+          </div>
+          <p class="text-[11px] text-slate-400">بوابة كلية الهندسة • الساعات المعتمدة</p>
+        </div>
+      </a>
+
+      <!-- الإجراءات -->
+      <div class="flex items-center gap-2.5">
+        <a href="departments.html" class="px-4 py-2 rounded-full ios-btn text-slate-200 hover:text-white text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+          <span class="hidden sm:inline">الأقسام</span>
+        </a>
+
+        <button onclick="toggleModal('login-modal')" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500/80 to-blue-600/80 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 border border-white/30 transition flex items-center gap-2">
+          <i class="fa-solid fa-user text-xs"></i>
+          <span>حساب الطالب</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full">
+
+    <!-- HERO HEADER -->
+    <section class="ios-glass rounded-[36px] p-6 lg:p-10 border border-white/20 relative overflow-hidden shadow-2xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-8 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-bold shadow-inner">
+            <i class="fa-solid fa-wand-magic-sparkles text-cyan-300"></i> نظام الساعات المعتمدة (نظام الـ 4.0)
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+            احسب معدلك الفصلي والتراكمي <br>
+            <span class="bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 bg-clip-text text-transparent">
+              بدقة فورية ومطابقة للائحة الهندسية
+            </span>
+          </h2>
+          <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl leading-relaxed">
+            أدخل ساعات كل مادة وتقديرها المتوقع، ويمكنك دمج الساعات السابقة والمعدل السابق لحساب المعدل التراكمي الإجمالي CGPA.
+          </p>
+        </div>
+
+        <!-- بطاقة النتيجة الكبيرة -->
+        <div class="lg:col-span-4 ios-glass-card p-6 rounded-[28px] text-center border-2 border-cyan-400/30 shadow-2xl space-y-3 bg-gradient-to-b from-cyan-500/10 to-transparent">
+          <span class="text-xs text-slate-400 font-bold block">المعدل المحسوب (GPA)</span>
+          <div class="text-4xl sm:text-5xl font-black bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent tracking-tight" id="gpa-score-display">
+            0.00
+          </div>
+          <span class="text-xs text-slate-400 font-mono">من أصل 4.00</span>
+          
+          <div class="pt-2">
+            <span id="gpa-standing-badge" class="px-4 py-1.5 rounded-full text-xs font-bold bg-white/10 text-slate-300 border border-white/15">
+              لم يتم الحساب بعد
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/10 text-center">
+            <div>
+              <span id="total-hours-display" class="block text-base font-bold text-white">0</span>
+              <span class="text-[10px] text-slate-400">إجمالي الساعات</span>
+            </div>
+            <div>
+              <span id="total-points-display" class="block text-base font-bold text-cyan-300">0.0</span>
+              <span class="text-[10px] text-slate-400">مجموع النقاط</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= CALCULATOR CONTAINER ================= -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- القسم الأيسر: الحاسبة الرئيسية للمواد -->
+      <div class="lg:col-span-8 ios-glass rounded-[32px] p-6 lg:p-8 space-y-6 border border-white/20 shadow-xl">
+        
+        <!-- التبديل بين الفصلي والتراكمي -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+          <div>
+            <h3 class="text-lg font-black text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-cyan-400"></i> قائمة مواد الفصل الحالي
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">أدخل ساعات كل مادة وتقديرك فيها</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="addSubjectRow()" class="px-4 py-2 rounded-full ios-btn text-cyan-300 text-xs font-bold flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-plus text-xs"></i> إضافة مادة
+            </button>
+            <button onclick="resetCalculator()" class="px-4 py-2 rounded-full ios-btn text-rose-300 hover:text-rose-200 text-xs font-bold flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-rotate-left text-xs"></i> إعادة ضبط
+            </button>
+          </div>
+        </div>
+
+        <!-- خانة المعدل التراكمي السابق (اختياري) -->
+        <div class="ios-glass-card p-4 rounded-2xl border border-white/15 bg-white/[0.03]">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-xs font-bold text-slate-200 flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="include-previous-gpa" onchange="togglePreviousGpaInputs()" class="accent-cyan-400 w-4 h-4 rounded">
+              <span>دمج المعدل التراكمي السابق (لحساب الـ CGPA الكلي)</span>
+            </label>
+          </div>
+
+          <div id="previous-gpa-fields" class="hidden grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">المعدل التراكمي السابق (GPA)</label>
+              <input type="number" id="prev-gpa-input" step="0.01" min="0" max="4" placeholder="مثال: 3.25" class="w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">الساعات المكتسبة السابقة</label>
+              <input type="number" id="prev-hours-input" step="1" min="0" placeholder="مثال: 45" class="w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+            </div>
+          </div>
+        </div>
+
+        <!-- حاوية صفوف المواد -->
+        <div class="space-y-3" id="subjects-container">
+          <!-- تملأ بالـ JS -->
+        </div>
+
+        <!-- زر الحساب الكبير -->
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <button onclick="calculateAcademicGPA()" class="w-full sm:w-auto px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/25 transition">
+            احسب المعدل التراكمي الآن ✨
+          </button>
+          
+          <span class="text-[11px] text-slate-400">يتم الحساب تلقائياً أيضاً عند تغيير أي قيمة</span>
+        </div>
+
+      </div>
+
+      <!-- القسم الأيمن: سلم التقديرات واللوائح -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- كارت سلم التقديرات -->
+        <div class="ios-glass rounded-[32px] p-6 space-y-4 border border-white/20 shadow-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-base">
+              <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-black text-white">سلم التقديرات المعتمد</h4>
+              <p class="text-[10px] text-slate-400">النقاط المقابلة لكل رمز</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-white/[0.04] text-slate-400 border-b border-white/10">
+                <tr>
+                  <th class="py-2.5 px-3">الرمز</th>
+                  <th class="py-2.5 px-3">النقاط</th>
+                  <th class="py-2.5 px-3">التقدير</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/[0.06] text-slate-300 text-[11px]">
+                <tr>
+                  <td class="py-2 px-3 font-bold text-emerald-400">A+ / A</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">4.00 - 3.70</td>
+                  <td class="py-2 px-3">ممتاز مرتفع / ممتاز</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-cyan-400">B+ / B</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">3.30 - 3.00</td>
+                  <td class="py-2 px-3">جيد جداً مرتفع / جيد جداً</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-yellow-400">C+ / C</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">2.70 - 2.30</td>
+                  <td class="py-2 px-3">جيد مرتفع / جيد</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-amber-400">D+ / D</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">1.70 - 1.00</td>
+                  <td class="py-2 px-3">مقبول مرتفع / مقبول</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-rose-400">F</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">0.00</td>
+                  <td class="py-2 px-3 text-rose-300">راسب</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- نصائح للحفاظ على المعدل -->
+        <div class="ios-glass-card p-5 rounded-[28px] space-y-2.5 border border-white/15">
+          <div class="flex items-center gap-2 text-cyan-300 text-xs font-bold">
+            <i class="fa-solid fa-lightbulb text-amber-400"></i>
+            <span>نصيحة هندسية</span>
+          </div>
+          <p class="text-[11px] text-slate-300/80 leading-relaxed">
+            المواد ذات الـ 3 أو 4 ساعات معتمدة لها الوزن الأكبر في التأثير على الـ GPA، ركّز على تحقيق تقديرات مرتفعة بها لرفع المعدل بسرعة.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= LOGIN MODAL ================= -->
+  <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="ios-glass max-w-md w-full rounded-[32px] p-8 relative border border-white/30 shadow-2xl">
+      <button onclick="toggleModal('login-modal')" class="absolute top-6 left-6 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-500/30 border border-white/20 text-cyan-300 flex items-center justify-center mx-auto mb-3 text-2xl shadow-lg">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h4 class="text-xl font-bold text-white">تسجيل الدخول الأكاديمي</h4>
+        <p class="text-xs text-slate-400 mt-1">أدخل الكود الجامعي للوصول لسجلك الأكاديمي</p>
+      </div>
+
+      <form onsubmit="handleUserLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-slate-300 font-semibold mb-1">الرقم الجامعي</label>
+          <input type="text" required placeholder="مثال: 20261084" class="w-full bg-white/[0.07] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 font-semibold mb-1">كلمة المرور</label>
+          <input type="password" required placeholder="••••••••" class="w-full bg-white/[0.07] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-cyan-500/25 transition">
+          دخول إلى الحساب 🚀
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i class="fa-solid fa-atom text-cyan-400 text-base"></i>
+      <span class="font-bold text-white">كلية الهندسة • جامعة قنا</span>
+    </div>
+    <p class="text-[11px] text-slate-500">منظومة الحساب الأكاديمي الموحدة</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // سلم النقاط المعتمد
+    const gradePoints = {
+      'A+': 4.00,
+      'A': 3.70,
+      'B+': 3.30,
+      'B': 3.00,
+      'C+': 2.70,
+      'C': 2.30,
+      'D+': 1.70,
+      'D': 1.00,
+      'F': 0.00
+    };
+
+    // المواد الافتراضية عند الفتح
+    const defaultSubjects = [
+      { name: '', hours: 3, grade: 'A+' },
+      { name: '', hours: 3, grade: 'A' },
+      { name: '', hours: 3, grade: 'B+' },
+      { name: '', hours: 2, grade: 'A' },
+      { name: '', hours: 2, grade: 'A+' }
+    ];
+
+    function renderInitialSubjects() {
+      const container = document.getElementById('subjects-container');
+      container.innerHTML = '';
+      defaultSubjects.forEach(s => addSubjectRow(s.name, s.hours, s.grade));
+      calculateAcademicGPA();
+    }
+
+    function addSubjectRow(name = '', hours = 3, grade = 'A+') {
+      const container = document.getElementById('subjects-container');
+      const row = document.createElement('div');
+      row.className = 'subject-row grid grid-cols-12 gap-2.5 items-center bg-white/[0.04] p-3 rounded-2xl border border-white/10 hover:border-white/20 transition';
+      
+      row.innerHTML = `
+        <div class="col-span-5 sm:col-span-5">
+          <input type="text" placeholder="اسم المادة (اختياري)" value="${name}" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div class="col-span-3 sm:col-span-3">
+          <select onchange="calculateAcademicGPA()" class="subject-hours w-full bg-slate-900 border border-white/10 rounded-xl px-2 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+            <option value="1" ${hours == 1 ? 'selected' : ''}>1 ساعة</option>
+            <option value="2" ${hours == 2 ? 'selected' : ''}>2 ساعة</option>
+            <option value="3" ${hours == 3 ? 'selected' : ''}>3 ساعات</option>
+            <option value="4" ${hours == 4 ? 'selected' : ''}>4 ساعات</option>
+          </select>
+        </div>
+        <div class="col-span-3 sm:col-span-3">
+          <select onchange="calculateAcademicGPA()" class="subject-grade w-full bg-slate-900 border border-white/10 rounded-xl px-2 py-2 text-xs text-cyan-300 font-bold focus:outline-none focus:border-cyan-400">
+            ${Object.keys(gradePoints).map(g => `<option value="${g}" ${g === grade ? 'selected' : ''}>${g} (${gradePoints[g].toFixed(2)})</option>`).join('')}
+          </select>
+        </div>
+        <div class="col-span-1 sm:col-span-1 text-center">
+          <button onclick="removeSubjectRow(this)" class="w-8 h-8 rounded-lg ios-btn flex items-center justify-center text-slate-400 hover:text-rose-400 transition mx-auto">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+          </button>
+        </div>
+      `;
+
+      container.appendChild(row);
+      calculateAcademicGPA();
+    }
+
+    function removeSubjectRow(btn) {
+      const rows = document.querySelectorAll('.subject-row');
+      if (rows.length <= 1) {
+        showToast('⚠️ يجب أن تحتوي الحاسبة على مادة واحدة على الأقل');
+        return;
+      }
+      btn.closest('.subject-row').remove();
+      calculateAcademicGPA();
+    }
+
+    function togglePreviousGpaInputs() {
+      const isChecked = document.getElementById('include-previous-gpa').checked;
+      const fields = document.getElementById('previous-gpa-fields');
+      if (isChecked) {
+        fields.classList.remove('hidden');
+        fields.classList.add('grid');
+      } else {
+        fields.classList.add('hidden');
+        fields.classList.remove('grid');
+      }
+      calculateAcademicGPA();
+    }
+
+    function calculateAcademicGPA() {
+      const rows = document.querySelectorAll('.subject-row');
+      let currentTermHours = 0;
+      let currentTermPoints = 0;
+
+      rows.forEach(r => {
+        const hours = parseFloat(r.querySelector('.subject-hours').value) || 0;
+        const grade = r.querySelector('.subject-grade').value;
+        const pts = gradePoints[grade] !== undefined ? gradePoints[grade] : 0;
+
+        currentTermHours += hours;
+        currentTermPoints += (pts * hours);
+      });
+
+      let finalGpa = 0;
+      let totalHours = currentTermHours;
+      let totalPoints = currentTermPoints;
+
+      // فحص دمج التراكمي السابق
+      const includePrev = document.getElementById('include-previous-gpa').checked;
+      if (includePrev) {
+        const prevGpa = parseFloat(document.getElementById('prev-gpa-input').value) || 0;
+        const prevHours = parseFloat(document.getElementById('prev-hours-input').value) || 0;
+
+        const prevPoints = prevGpa * prevHours;
+        totalHours += prevHours;
+        totalPoints += prevPoints;
+      }
+
+      if (totalHours > 0) {
+        finalGpa = (totalPoints / totalHours);
+      }
+
+      const formattedGpa = finalGpa.toFixed(2);
+      document.getElementById('gpa-score-display').innerText = formattedGpa;
+      document.getElementById('total-hours-display').innerText = totalHours;
+      document.getElementById('total-points-display').innerText = totalPoints.toFixed(1);
+
+      // تحديد التقدير العام
+      updateStandingBadge(finalGpa);
+    }
+
+    function updateStandingBadge(gpa) {
+      const badge = document.getElementById('gpa-standing-badge');
+      if (gpa >= 3.7) {
+        badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30';
+        badge.innerText = '🌟 ممتاز مرتفع (Excellent With Honor)';
+      } else if (gpa >= 3.0) {
+        badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30';
+        badge.innerText = '✨ جيد جداً (Very Good)';
+      } else if (gpa >= 2.3) {
+        badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-400/30';
+        badge.innerText = '👍 جيد (Good)';
+      } else if (gpa >= 1.0) {
+        badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30';
+        badge.innerText = '⚠️ مقبول (Pass)';
+      } else {
+        badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-400/30';
+        badge.innerText = '🚨 إنذار أكاديمي (Academic Warning)';
+      }
+    }
+
+    function resetCalculator() {
+      document.getElementById('include-previous-gpa').checked = false;
+      document.getElementById('prev-gpa-input').value = '';
+      document.getElementById('prev-hours-input').value = '';
+      togglePreviousGpaInputs();
+      renderInitialSubjects();
+      showToast('🔄 تمت إعادة ضبط الحاسبة بنجاح');
+    }
+
+    // المودال والإشعارات
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function handleUserLogin(e) {
+      e.preventDefault();
+      toggleModal('login-modal');
+      showToast('🎉 مرحباً بك! تم تسجيل الدخول بنجاح.');
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'ios-glass px-4 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2.5 shadow-2xl border border-white/25 transition-all duration-300';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-cyan-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // تشغيل الحاسبة تلقائياً عند فتح الصفحة
+    window.onload = () => {
+      renderInitialSubjects();
+      document.getElementById('prev-gpa-input').addEventListener('input', calculateAcademicGPA);
+      document.getElementById('prev-hours-input').addEventListener('input', calculateAcademicGPA);
+    };
+  </script>
+</body>
+</html>
