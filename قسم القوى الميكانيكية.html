@@ -133,14 +133,11 @@
 
       <!-- الإجراءات -->
       <div class="flex items-center gap-2.5">
-        <a href="departments.html" class="px-4 py-2 rounded-full ios-btn text-slate-200 hover:text-white text-xs font-bold flex items-center gap-2">
+        <a href="الاقسام الهندسية.html" class="px-4 py-2 rounded-full ios-btn text-slate-200 hover:text-white text-xs font-bold flex items-center gap-2">
           <i class="fa-solid fa-arrow-right text-xs"></i>
           <span class="hidden sm:inline">كل الأقسام</span>
         </a>
 
-        <button onclick="toggleModal('login-modal')" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500/80 to-orange-600/80 hover:from-rose-400 hover:to-orange-500 text-white font-bold text-xs shadow-lg shadow-rose-500/20 border border-white/30 transition flex items-center gap-2">
-          <i class="fa-solid fa-user text-xs"></i>
-          <span>حساب الطالب</span>
         </button>
       </div>
     </div>
@@ -165,7 +162,7 @@
             </span>
           </h2>
           <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl leading-relaxed">
-            اضغط على المستوى الأكاديمي لعرض مقررات الفصل الدراسي الأول والفصل الدراسي الثاني، بالإضافة للأكواد الرسمية مع إمكانية الوصول إلى الشيتات والمحاضرات.
+            اضغط على المستوى الأكاديمي لعرض مقررات الفصل الدراسي الأول والفصل الدراسي الثاني، بالإضافة للأكواد الرسمية مع إمكانية الوصول الفوري للشيتات والمحاضرات المرفوعة.
           </p>
         </div>
 
@@ -178,7 +175,7 @@
           </div>
           <div class="ios-glass-card p-4 rounded-2xl text-center">
             <i class="fa-solid fa-fire text-orange-400 text-lg mb-1"></i>
-            <h4 class="text-xl font-extrabold text-white">48+</h4>
+            <h4 class="text-xl font-extrabold text-white">51</h4>
             <p class="text-[10px] text-slate-400">مقرر دراسي باللائحة</p>
           </div>
           <div class="ios-glass-card p-4 rounded-2xl text-center">
@@ -276,10 +273,10 @@
         </div>
       </div>
 
-      <!-- الحاويتان (ترم أول - الصف الشمال | ترم ثاني - الصف اليمين) -->
+      <!-- الحاويتان (ترم أول | ترم ثاني) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <!-- ================= العمود 1: الفصل الدراسي الأول (الصف الشمال في الصورة) ================= -->
+        <!-- العمود 1: الفصل الدراسي الأول -->
         <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-rose-400/30 bg-gradient-to-b from-rose-500/[0.08] to-transparent shadow-xl">
           <div class="flex items-center justify-between pb-3 border-b border-white/10">
             <div class="flex items-center gap-3">
@@ -300,7 +297,7 @@
           </div>
         </div>
 
-        <!-- ================= العمود 2: الفصل الدراسي الثاني (الصف اليمين في الصورة) ================= -->
+        <!-- العمود 2: الفصل الدراسي الثاني -->
         <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-orange-500/30 bg-gradient-to-b from-orange-600/[0.08] to-transparent shadow-xl">
           <div class="flex items-center justify-between pb-3 border-b border-white/10">
             <div class="flex items-center gap-3">
@@ -326,6 +323,32 @@
     </section>
 
   </main>
+
+  <!-- ================= MODAL: ملفات المادة المرفوعة من الأدمن (تحميل مباشر) ================= -->
+  <div id="subject-files-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="ios-glass max-w-lg w-full rounded-[32px] p-6 sm:p-8 relative border border-white/30 shadow-2xl max-h-[85vh] flex flex-col">
+      
+      <button onclick="toggleModal('subject-files-modal')" class="absolute top-6 left-6 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3.5 mb-5 pb-4 border-b border-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-300 flex items-center justify-center text-2xl border border-rose-400/30">
+          <i class="fa-solid fa-folder-open"></i>
+        </div>
+        <div>
+          <h3 id="modal-subject-name" class="text-base font-bold text-white">اسم المادة</h3>
+          <p id="modal-subject-code" class="text-xs text-rose-300 font-mono font-bold">CODE123</p>
+        </div>
+      </div>
+
+      <!-- قائمة الملفات المرفوعة -->
+      <div id="modal-files-list" class="space-y-3 overflow-y-auto pr-1 flex-1">
+        <!-- تتولد ملفات المادة المرفوعة من الأدمن هنا ديناميكياً -->
+      </div>
+
+    </div>
+  </div>
 
   <!-- ================= LOGIN MODAL ================= -->
   <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-4">
@@ -369,12 +392,13 @@
 
   <!-- ================= JAVASCRIPT ================= -->
   <script>
-    // ================= قاعدة البيانات المفرغة بدقة من صورة اللائحة (Mechanical Power) =================
-    // الصف الشمال = term: 1 (الفصل الدراسي الأول)
-    // الصف اليمين = term: 2 (الفصل الدراسي الثاني)
+    // ================= مفتاح التخزين المشترك مع صفحة الأدمن =================
+    const STORAGE_KEY = 'ENGINEER_HUB_PDFS_2026';
+
+    // ================= قاعدة البيانات المفرغة بدقة من اللائحة (Mechanical Power) =================
     const mechCurriculum = {
       
-      // ================= LEVEL 100 (مستوى 100) =================
+      // LEVEL 100
       '100': {
         term1: [
           { code: 'PDE111', name: 'رسم ميكانيكي (1)', icon: 'fa-compass-drafting' },
@@ -395,7 +419,7 @@
         ]
       },
 
-      // ================= LEVEL 200 (مستوى 200) =================
+      // LEVEL 200
       '200': {
         term1: [
           { code: 'PDE211', name: 'أساسيات التصميم الميكانيكي', icon: 'fa-drafting-compass' },
@@ -415,7 +439,7 @@
         ]
       },
 
-      // ================= LEVEL 300 (مستوى 300) =================
+      // LEVEL 300
       '300': {
         term1: [
           { code: 'MPE311', name: 'مقرر اختياري (5)', icon: 'fa-book-bookmark' },
@@ -436,7 +460,7 @@
         ]
       },
 
-      // ================= LEVEL 400 (مستوى 400) =================
+      // LEVEL 400
       '400': {
         term1: [
           { code: 'MPE411', name: 'تبريد', icon: 'fa-snowflake' },
@@ -535,9 +559,9 @@
             </div>
           </div>
           
-          <button onclick="downloadSubjectFiles('${item.name}', '${item.code}')" class="px-3 py-2 rounded-xl ios-btn text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1.5 shadow-sm">
+          <button onclick="downloadSubjectFiles('${item.name}', '${item.code}')" class="px-3.5 py-2 rounded-xl ios-btn text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-cloud-arrow-down text-xs ${iconColor}"></i>
-            <span class="hidden sm:inline">تحميل</span>
+            <span>تحميل</span>
           </button>
         </div>
       `;
@@ -546,11 +570,70 @@
     // البحث اللحظي
     document.getElementById('subject-search-input').addEventListener('input', renderLevelSubjects);
 
+    // ================= دالة فتح ملفات المادة وعرض ما رفعه الأدمن من LocalStorage =================
     function downloadSubjectFiles(name, code) {
-      showToast(`📥 جاري فتح ملفات ومذكرات مقرر: ${name} (${code})`);
+      document.getElementById('modal-subject-name').textContent = name;
+      document.getElementById('modal-subject-code').textContent = code;
+
+      // قراءة الملفات من التخزين المشترك
+      const allPdfs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      
+      // تصفية الملفات الخاصة بهذه المادة أو الكود بالتحديد لقسم القوى الميكانيكية
+      const subjectFiles = allPdfs.filter(file => {
+        const matchDept = !file.dept || file.dept.includes('ميكانيكية');
+        const matchCode = file.code && file.code.toUpperCase() === code.toUpperCase();
+        const matchName = file.subject && (file.subject.includes(name) || file.subject.includes(code));
+        return matchDept && (matchCode || matchName);
+      });
+
+      const listContainer = document.getElementById('modal-files-list');
+      listContainer.innerHTML = '';
+
+      if (subjectFiles.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-10 space-y-2.5">
+            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-400 text-2xl">
+              <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-300">لا توجد محاضرات أو شيتات مرفوعة لهذه المادة حتى الآن.</p>
+            <p class="text-[10px] text-slate-500">سيتم إضافة الملفات والمذكرات قريباً عبر المشرف الأكاديمي.</p>
+          </div>
+        `;
+      } else {
+        subjectFiles.forEach(file => {
+          const typeColor = file.type === 'محاضرة' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' :
+                            file.type === 'سكشن' ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' :
+                            file.type === 'ملخص' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                            'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+          const item = document.createElement('div');
+          item.className = 'ios-glass-card p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10 hover:border-rose-400/40 transition';
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center text-lg border border-rose-400/30">
+                <i class="fa-solid fa-file-pdf"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-white">${file.fileTitle}</h5>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border ${typeColor}">${file.type}</span>
+                  <span class="text-[10px] text-slate-400">${file.date}</span>
+                </div>
+              </div>
+            </div>
+            <a href="${file.link}" target="_blank" download="${file.fileTitle}.pdf" class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-rose-500/20 transition">
+              <i class="fa-solid fa-download"></i>
+              <span>تحميل</span>
+            </a>
+          `;
+          listContainer.appendChild(item);
+        });
+      }
+
+      toggleModal('subject-files-modal');
     }
 
-    // المودال والإشعارات
+    // فتح وغلق النوافذ المنبثقة
     function toggleModal(id) {
       const modal = document.getElementById(id);
       modal.classList.toggle('hidden');

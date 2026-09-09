@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم المشرف | Engineer Hub Admin</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* حل مشكلة تباين القوائم المنسدلة */
+    select option {
+      background-color: #0f172a !important;
+      color: #ffffff !important;
+      padding: 10px;
+    }
+
+    select optgroup {
+      background-color: #090d16 !important;
+      color: #38bdf8 !important;
+      font-weight: 800;
+    }
+
+    /* خلفية متدرجة سائلة حية (Apple Mesh Gradient) */
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.22) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.16) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* تأثير الزجاج الشفاف */
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .ios-btn:active {
+      transform: scale(0.97);
+    }
+
+    .custom-input {
+      background: #0d1322 !important;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff !important;
+      transition: all 0.2s ease;
+    }
+
+    .custom-input:focus {
+      background: #111827 !important;
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+    }
+
+    /* شريط التمرير */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <!-- خلفية الألوان الانسيابية -->
+  <div class="ios-mesh-bg"></div>
+
+  <!-- حاوية الإشعارات (Toasts) -->
+  <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-20 py-3 flex items-center justify-between">
+      
+      <!-- شعار النظام وهوية المسؤول -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-600/30 border border-cyan-400/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md">
+          <i class="fa-solid fa-gauge-high text-xl text-cyan-300"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+              لوحة إدارة Engineer Hub
+            </span>
+            <span class="text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-bold">Admin Portal</span>
+          </div>
+          <p class="text-[11px] text-slate-400">إدارة ومزامنة المحاضرات • كلية الهندسة جامعة قنا</p>
+        </div>
+      </div>
+
+      <!-- الإجراءات السريعة -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="px-4 py-2.5 rounded-full ios-btn text-slate-200 text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="hidden sm:inline">العودة للرئيسية</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full">
+
+    <!-- 1. إحصائيات سريعة (Stat Cards) -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="ios-glass-card p-5 rounded-3xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xl border border-cyan-500/30">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-white">207</h3>
+          <p class="text-xs text-slate-400">مقرر باللائحة الرسمية</p>
+        </div>
+      </div>
+
+      <div class="ios-glass-card p-5 rounded-3xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-xl border border-purple-500/30">
+          <i class="fa-solid fa-cubes"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-white">5</h3>
+          <p class="text-xs text-slate-400">مسارات ومراحل أكاديمية</p>
+        </div>
+      </div>
+
+      <div class="ios-glass-card p-5 rounded-3xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-xl border border-emerald-500/30">
+          <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <div>
+          <h3 id="stat-files" class="text-2xl font-black text-emerald-400">0</h3>
+          <p class="text-xs text-slate-400">ملفات مرفوعة بالمنظومة</p>
+        </div>
+      </div>
+
+      <div class="ios-glass-card p-5 rounded-3xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl border border-amber-500/30">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-white">مزامنة حية</h3>
+          <p class="text-xs text-slate-400">مربوطة بصفحات الطلاب</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. أزرار التبويبات (Tab Navigation) -->
+    <div class="flex items-center gap-2 border-b border-white/10 pb-4 overflow-x-auto">
+      <button onclick="switchTab('departments')" id="tab-btn-departments" class="tab-btn px-6 py-2.5 rounded-full text-xs font-bold bg-white text-slate-900 shadow-lg transition flex items-center gap-2">
+        <i class="fa-solid fa-cubes text-cyan-600"></i> المراحل ورفع الـ PDF
+      </button>
+      <button onclick="switchTab('lectures')" id="tab-btn-lectures" class="tab-btn px-6 py-2.5 rounded-full text-xs font-bold ios-btn text-slate-300 hover:text-white transition flex items-center gap-2">
+        <i class="fa-solid fa-layer-group"></i> سجل الملفات والمحاضرات
+      </button>
+      <button onclick="switchTab('announcements')" id="tab-btn-announcements" class="tab-btn px-6 py-2.5 rounded-full text-xs font-bold ios-btn text-slate-300 hover:text-white transition flex items-center gap-2">
+        <i class="fa-solid fa-bullhorn text-amber-400"></i> بث الإعلانات والتنبيهات
+      </button>
+    </div>
+
+    <!-- 3. محتوى التبويب: المراحل والأقسام الهندسية (5 مراحل معتمدة) -->
+    <section id="tab-departments" class="tab-content grid grid-cols-1 sm:grid-cols-2 gap-5">
+      
+      <!-- 0. إعدادي هندسة (الفرقة التمهيدية) -->
+      <div class="ios-glass-card p-6 rounded-3xl bg-gradient-to-br from-amber-500/15 to-yellow-500/15 border border-amber-400/30 space-y-4 shadow-xl sm:col-span-2 lg:col-span-1">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/25 text-amber-300 flex items-center justify-center text-2xl border border-amber-400/40">
+              <i class="fa-solid fa-shapes"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-base font-extrabold text-white">إعدادي هندسة</h4>
+                <span class="text-[9px] bg-amber-500/30 text-amber-300 px-2 py-0.5 rounded-full font-bold border border-amber-400/30">الفرقة التمهيدية</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">12 مقرر رسمي • (ترم أول + ترم ثاني)</p>
+            </div>
+          </div>
+          <span class="text-xs text-white/70 font-mono bg-white/10 px-3 py-1 rounded-xl border border-white/15">PREP</span>
+        </div>
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+          <a href="prep.html" target="_blank" class="text-amber-300 hover:text-amber-200 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> فتح صفحة إعدادي
+          </a>
+          <button onclick="openAddPdfModal('إعدادي هندسة')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/25 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-circle-plus"></i> إضافة PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 1. الهندسة المدنية -->
+      <div class="ios-glass-card p-6 rounded-3xl bg-gradient-to-br from-blue-500/15 to-cyan-500/15 border border-cyan-400/30 space-y-4 shadow-xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/25 text-cyan-300 flex items-center justify-center text-2xl border border-cyan-400/40">
+              <i class="fa-solid fa-building"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-base font-extrabold text-white">الهندسة المدنية</h4>
+                <span class="text-[9px] bg-cyan-500/30 text-cyan-300 px-2 py-0.5 rounded-full font-bold border border-cyan-400/30">مفعل باللائحة</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">48 مقرر رسمي • مستويات (100، 200، 300، 400)</p>
+            </div>
+          </div>
+          <span class="text-xs text-white/70 font-mono bg-white/10 px-3 py-1 rounded-xl border border-white/15">CIVIL</span>
+        </div>
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+          <a href="قسم الهندسة المدنية.html" target="_blank" class="text-cyan-300 hover:text-cyan-200 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> فتح صفحة القسم
+          </a>
+          <button onclick="openAddPdfModal('الهندسة المدنية')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/20 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-circle-plus"></i> إضافة PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. هندسة الإلكترونيات والاتصالات -->
+      <div class="ios-glass-card p-6 rounded-3xl bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-400/30 space-y-4 shadow-xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/25 text-purple-300 flex items-center justify-center text-2xl border border-purple-400/40">
+              <i class="fa-solid fa-tower-cell"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-base font-extrabold text-white">هندسة الإلكترونيات والاتصالات</h4>
+                <span class="text-[9px] bg-purple-500/30 text-purple-300 px-2 py-0.5 rounded-full font-bold border border-purple-400/30">مفعل باللائحة</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">48 مقرر رسمي • مستويات (100، 200، 300، 400)</p>
+            </div>
+          </div>
+          <span class="text-xs text-white/70 font-mono bg-white/10 px-3 py-1 rounded-xl border border-white/15">ECE</span>
+        </div>
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+          <a href="قسم هندسة الالكترونيات والاتصالات.html" target="_blank" class="text-purple-300 hover:text-purple-200 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> فتح صفحة القسم
+          </a>
+          <button onclick="openAddPdfModal('هندسة الإلكترونيات والاتصالات')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-xs shadow-lg shadow-purple-500/20 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-circle-plus"></i> إضافة PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. الهندسة القوى الميكانيكية -->
+      <div class="ios-glass-card p-6 rounded-3xl bg-gradient-to-br from-rose-500/15 to-orange-500/15 border border-rose-400/30 space-y-4 shadow-xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/25 text-rose-300 flex items-center justify-center text-2xl border border-rose-400/40">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-base font-extrabold text-white">الهندسة القوى الميكانيكية</h4>
+                <span class="text-[9px] bg-rose-500/30 text-rose-300 px-2 py-0.5 rounded-full font-bold border border-rose-400/30">مفعل باللائحة</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">51 مقرر رسمي • مستويات (100، 200، 300، 400)</p>
+            </div>
+          </div>
+          <span class="text-xs text-white/70 font-mono bg-white/10 px-3 py-1 rounded-xl border border-white/15">MEP</span>
+        </div>
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+          <a href="قسم القوى الميكانيكية.html" target="_blank" class="text-rose-300 hover:text-rose-200 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> فتح صفحة القسم
+          </a>
+          <button onclick="openAddPdfModal('الهندسة القوى الميكانيكية')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-lg shadow-rose-500/25 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-circle-plus"></i> إضافة PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. الهندسة الكهربية -->
+      <div class="ios-glass-card p-6 rounded-3xl bg-gradient-to-br from-sky-500/15 to-indigo-500/15 border border-sky-400/30 space-y-4 shadow-xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/25 text-sky-300 flex items-center justify-center text-2xl border border-sky-400/40">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-base font-extrabold text-white">قسم الهندسة الكهربية</h4>
+                <span class="text-[9px] bg-sky-500/30 text-sky-300 px-2 py-0.5 rounded-full font-bold border border-sky-400/30">مفعل باللائحة</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">48 مقرر رسمي • مستويات (100، 200، 300، 400)</p>
+            </div>
+          </div>
+          <span class="text-xs text-white/70 font-mono bg-white/10 px-3 py-1 rounded-xl border border-white/15">EE</span>
+        </div>
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+          <a href="قسم الهندسة الكهربية.html" target="_blank" class="text-sky-300 hover:text-sky-200 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> فتح صفحة القسم
+          </a>
+          <button onclick="openAddPdfModal('الهندسة الكهربية')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-black text-xs shadow-lg shadow-sky-500/25 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-circle-plus"></i> إضافة PDF
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 4. محتوى التبويب: جدول واستعراض الملفات المرفوعة -->
+    <section id="tab-lectures" class="tab-content hidden space-y-6">
+      
+      <div class="ios-glass p-5 rounded-3xl flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex-1 min-w-[240px] relative">
+          <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" oninput="filterLectures()" placeholder="ابحث باسم المادة، الكود، أو الترم..." class="custom-input w-full pr-10 pl-4 py-2.5 rounded-2xl text-xs">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <select id="filterDept" onchange="filterLectures()" class="custom-input px-4 py-2.5 rounded-2xl text-xs cursor-pointer">
+            <option value="all">جميع الأقسام والمراحل</option>
+            <option value="إعدادي هندسة">إعدادي هندسة</option>
+            <option value="الهندسة المدنية">الهندسة المدنية</option>
+            <option value="هندسة الإلكترونيات والاتصالات">هندسة الإلكترونيات والاتصالات</option>
+            <option value="الهندسة القوى الميكانيكية">الهندسة القوى الميكانيكية</option>
+            <option value="الهندسة الكهربية">الهندسة الكهربية</option>
+          </select>
+
+          <select id="filterTerm" onchange="filterLectures()" class="custom-input px-4 py-2.5 rounded-2xl text-xs cursor-pointer">
+            <option value="all">جميع الفصول</option>
+            <option value="الترم الأول">الترم الأول</option>
+            <option value="الترم الثاني">الترم الثاني</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ios-glass rounded-3xl overflow-hidden border border-white/15">
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-white/5 text-slate-300 font-bold border-b border-white/10 uppercase">
+              <tr>
+                <th class="p-4">اسم الملف / المحتوى</th>
+                <th class="p-4">المادة الدراسية والكود</th>
+                <th class="p-4">القسم / المرحلة</th>
+                <th class="p-4">الفصل الدراسي</th>
+                <th class="p-4">النوع</th>
+                <th class="p-4">تاريخ الإضافة</th>
+                <th class="p-4 text-center">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="lecturesTableBody" class="divide-y divide-white/5 text-slate-200">
+              <!-- يتم توليد الصفوف عبر الجافاسكربت -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. محتوى التبويب: بث الإعلانات الجامعية -->
+    <section id="tab-announcements" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-5 ios-glass p-6 rounded-3xl space-y-4">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center">
+              <i class="fa-solid fa-bullhorn text-sm"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm text-white">نشر تنبيه أو إعلان فوري</h3>
+              <p class="text-[11px] text-slate-400">يظهر لطلاب الأقسام المحددة</p>
+            </div>
+          </div>
+
+          <form onsubmit="postAnnouncement(event)" class="space-y-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-300 mb-1">عنوان الإعلان</label>
+              <input type="text" id="announce-title" required placeholder="مثال: موعد تسليم شيتات ميكانيكا التربة" class="custom-input w-full px-4 py-2.5 rounded-xl text-xs">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-300 mb-1">المرحلة / القسم المستهدف</label>
+              <select id="announce-target" class="custom-input w-full px-4 py-2.5 rounded-xl text-xs">
+                <option value="جميع الأقسام">جميع الأقسام</option>
+                <option value="إعدادي هندسة">إعدادي هندسة (PREP)</option>
+                <option value="الهندسة المدنية">الهندسة المدنية (CIVIL)</option>
+                <option value="هندسة الإلكترونيات والاتصالات">هندسة الإلكترونيات والاتصالات (ECE)</option>
+                <option value="الهندسة القوى الميكانيكية">الهندسة القوى الميكانيكية (MEP)</option>
+                <option value="الهندسة الكهربية">الهندسة الكهربية (EE)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-300 mb-1">نص التنبيه</label>
+              <textarea id="announce-body" rows="3" required placeholder="تفاصيل الإعلان الأكاديمي..." class="custom-input w-full p-3 rounded-xl text-xs"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-amber-500/20 hover:brightness-110 transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> نشر التنبيه فوراً
+            </button>
+          </form>
+        </div>
+
+        <div class="lg:col-span-7 space-y-3" id="announcements-list">
+          <div class="ios-glass p-4 rounded-2xl flex items-start justify-between border-r-4 border-r-cyan-400">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-white">تحديث مراجع ومذكرات المنظومة</span>
+                <span class="text-[9px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full font-bold">الكل</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">تم تفعيل جميع المقررات الدراسية للأقسام والفرقة الإعدادية وفقاً للائحة 2026.</p>
+              <span class="text-[10px] text-slate-400 block pt-1">منذ لحظات • مشرف المنصة</span>
+            </div>
+            <button onclick="this.parentElement.remove(); showToast('🗑️ تم حذف الإعلان');" class="text-slate-400 hover:text-rose-400 p-2"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MODAL: نافذة إضافة PDF (تتلون ديناميكياً حسب القسم) ================= -->
+  <div id="add-pdf-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden items-center justify-center p-4">
+    <div id="modal-card-box" class="ios-glass max-w-lg w-full rounded-[32px] p-6 sm:p-8 relative border shadow-2xl max-h-[90vh] overflow-y-auto transition-all duration-300">
+      
+      <button onclick="toggleModal('add-pdf-modal')" class="absolute top-6 left-6 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- رأس النافذة المتلون حسب القسم أو إعدادي -->
+      <div class="flex items-center gap-3.5 mb-6">
+        <div id="modal-dept-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl border transition-all duration-300">
+          <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <span>إضافة PDF للمقررات</span>
+          </h3>
+          <p id="modal-dept-title" class="text-xs font-bold transition-all duration-300">الهندسة المدنية</p>
+        </div>
+      </div>
+
+      <form onsubmit="handlePdfSubmit(event)" class="space-y-4">
+        
+        <!-- حقل القسم مخفي ويُملأ برمجياً -->
+        <input type="hidden" id="pdf-dept" value="الهندسة المدنية">
+
+        <!-- اختيار الفصل الدراسي (ترم أول / ترم ثاني) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-2">اختر الفصل الدراسي</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="termSelection" value="term1" onchange="onTermChange()" class="peer sr-only">
+              <div id="term-box-1" class="term-radio-box p-3 rounded-2xl border border-white/15 bg-white/5 text-center text-xs font-bold text-slate-300 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-calendar-week"></i> الترم الأول
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="termSelection" value="term2" checked onchange="onTermChange()" class="peer sr-only">
+              <div id="term-box-2" class="term-radio-box p-3 rounded-2xl border border-white/15 bg-white/5 text-center text-xs font-bold text-slate-300 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt"></i> الترم الثاني
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- فلتر المستوى الأكاديمي (يتم إخفاؤه تلقائياً عند اختيار إعدادي هندسة) -->
+        <div id="level-filter-box">
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">المستوى الأكاديمي (اختياري للتصفية)</label>
+          <select id="pdf-level-filter" onchange="updateSubjectOptions()" class="custom-input w-full px-3 py-2 rounded-xl text-xs cursor-pointer">
+            <option value="all">جميع المستويات</option>
+            <option value="100">مستوى 100</option>
+            <option value="200">مستوى 200</option>
+            <option value="300">مستوى 300</option>
+            <option value="400">مستوى 400</option>
+          </select>
+        </div>
+
+        <!-- قائمة المواد التي تتغير ديناميكياً -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">اختر المقرر الدراسي</label>
+          <select id="pdf-subject" required class="custom-input w-full px-4 py-2.5 rounded-xl text-xs cursor-pointer font-medium">
+            <!-- تتولد أسماء المواد هنا عبر JS -->
+          </select>
+        </div>
+
+        <!-- عنوان المحاضرة / الملف ونوعه -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">عنوان الملف / رقم المحاضرة</label>
+            <input type="text" id="pdf-title" required placeholder="مثال: المحاضرة الأولى - مقدمة وشرح" class="custom-input w-full px-4 py-2.5 rounded-xl text-xs">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">نوع المحتوى</label>
+            <select id="pdf-type" class="custom-input w-full px-3 py-2.5 rounded-xl text-xs cursor-pointer">
+              <option value="محاضرة">محاضرة نظري (Lecture)</option>
+              <option value="سكشن">سكشن / شيت (Section)</option>
+              <option value="ملخص">ملخص ومذكرة (Summary)</option>
+              <option value="امتحان">امتحانات سابقة (Exams)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- رفع ملف من الجهاز -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">اختر ملف PDF من جهازك</label>
+          <div id="dropzone-box" class="relative border-2 border-dashed border-white/20 rounded-2xl p-4 text-center transition bg-white/[0.03] group">
+            <input type="file" id="local-pdf-file" accept=".pdf,.doc,.docx,.ppt,.pptx" onchange="updateFileLabel(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <div class="flex flex-col items-center gap-1.5">
+              <i id="upload-icon-element" class="fa-solid fa-cloud-arrow-up text-2xl group-hover:scale-110 transition"></i>
+              <span id="file-chosen-text" class="text-xs text-slate-300 font-bold">اضغط لاختيار ملف من جهازك (PDF)</span>
+              <span class="text-[10px] text-slate-500">الحد الأقصى الموصى به: 50MB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- رابط إضافي بديل (اختياري) -->
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-400 mb-1">أو ضع رابط مباشر للملف (Google Drive / Mega)</label>
+          <input type="url" id="pdf-url-link" placeholder="https://drive.google.com/..." class="custom-input w-full px-3 py-2 rounded-xl text-xs">
+        </div>
+
+        <!-- أزرار الإجراء -->
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" onclick="toggleModal('add-pdf-modal')" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-white/10 transition">
+            إلغاء
+          </button>
+          <button type="submit" id="submit-pdf-btn" class="px-6 py-2.5 rounded-xl font-black text-xs shadow-lg transition flex items-center gap-2">
+            <i class="fa-solid fa-check"></i> حفظ وإضافة الملف للمنصة
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-6 text-center text-xs text-slate-500 border-t border-white/10 w-full mt-10">
+    <p>لوحة تحكم المشرفين • Engineer Hub 2026 • كلية الهندسة جامعة قنا</p>
+    <p class="text-[11px] text-slate-400">منصة طلابية مستقلة تهدف إلى جمع وتنظيم المحتوى والبيانات الهندسية في مكان واحد</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // ================= 1. الثيمات اللونية المخصصة لكل مرحلة وقسم =================
+    const deptThemes = {
+      "إعدادي هندسة": {
+        color: "amber",
+        icon: "fa-solid fa-shapes",
+        titleClass: "text-xs font-bold text-amber-300",
+        iconBoxClass: "w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-2xl border border-amber-400/30",
+        modalBorder: "border-amber-400/30",
+        radioActiveClass: "peer-checked:bg-amber-500/30 peer-checked:border-amber-400 peer-checked:text-amber-200",
+        dropzoneIconClass: "fa-solid fa-cloud-arrow-up text-2xl text-amber-400 group-hover:scale-110 transition",
+        btnClass: "px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/25 transition flex items-center gap-2"
+      },
+      "الهندسة المدنية": {
+        color: "cyan",
+        icon: "fa-solid fa-building",
+        titleClass: "text-xs font-bold text-cyan-300",
+        iconBoxClass: "w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-2xl border border-cyan-400/30",
+        modalBorder: "border-cyan-400/30",
+        radioActiveClass: "peer-checked:bg-cyan-500/30 peer-checked:border-cyan-400 peer-checked:text-cyan-200",
+        dropzoneIconClass: "fa-solid fa-cloud-arrow-up text-2xl text-cyan-400 group-hover:scale-110 transition",
+        btnClass: "px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/25 transition flex items-center gap-2"
+      },
+      "هندسة الإلكترونيات والاتصالات": {
+        color: "purple",
+        icon: "fa-solid fa-tower-cell",
+        titleClass: "text-xs font-bold text-purple-300",
+        iconBoxClass: "w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-2xl border border-purple-400/30",
+        modalBorder: "border-purple-400/30",
+        radioActiveClass: "peer-checked:bg-purple-500/30 peer-checked:border-purple-400 peer-checked:text-purple-200",
+        dropzoneIconClass: "fa-solid fa-cloud-arrow-up text-2xl text-purple-400 group-hover:scale-110 transition",
+        btnClass: "px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-xs shadow-lg shadow-purple-500/25 transition flex items-center gap-2"
+      },
+      "الهندسة القوى الميكانيكية": {
+        color: "rose",
+        icon: "fa-solid fa-fire-flame-curved",
+        titleClass: "text-xs font-bold text-rose-300",
+        iconBoxClass: "w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-300 flex items-center justify-center text-2xl border border-rose-400/30",
+        modalBorder: "border-rose-400/30",
+        radioActiveClass: "peer-checked:bg-rose-500/30 peer-checked:border-rose-400 peer-checked:text-rose-200",
+        dropzoneIconClass: "fa-solid fa-cloud-arrow-up text-2xl text-rose-400 group-hover:scale-110 transition",
+        btnClass: "px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-lg shadow-rose-500/25 transition flex items-center gap-2"
+      },
+      "الهندسة الكهربية": {
+        color: "sky",
+        icon: "fa-solid fa-bolt",
+        titleClass: "text-xs font-bold text-sky-300",
+        iconBoxClass: "w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-300 flex items-center justify-center text-2xl border border-sky-400/30",
+        modalBorder: "border-sky-400/30",
+        radioActiveClass: "peer-checked:bg-sky-500/30 peer-checked:border-sky-400 peer-checked:text-sky-200",
+        dropzoneIconClass: "fa-solid fa-cloud-arrow-up text-2xl text-sky-400 group-hover:scale-110 transition",
+        btnClass: "px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-black text-xs shadow-lg shadow-sky-500/25 transition flex items-center gap-2"
+      }
+    };
+
+    // ================= 2. قاعدة البيانات المفرغة لكافة المراحل والأقسام الـ 5 =================
+    const departmentCurricula = {
+      
+      // 0. إعدادي هندسة (12 مقرر رسمي)
+      "إعدادي هندسة": {
+        levels: {
+          'إعدادي': {
+            term1: [
+              { code: 'UNR016', name: 'تاريخ هندسي'},
+              { code: 'BAS011', name: 'رياضيات (1) - جبر وتفاضل' },
+              { code: 'BAS012', name: 'فيزياء هندسية (1) - خواص مادة وحرارة' },
+              { code: 'UNR017', name: 'اختياري مقرر - مصطلحات هندسية' },
+              { code: 'MCE014', name: 'استاتيكا هندسية' },
+              { code: 'MCE013', name: 'رسم هندسي (1)' },
+              { code: 'ELE015', name: 'تكنولوجيا الحاسبات' },
+            ],
+            term2: [
+              { code: 'BAS021', name: 'رياضيات (2) - تكامل وهندسة تحليلية' },
+              { code: 'BAS022', name: 'فيزياء هندسية (2) - كهرومغناطيسية وضوء' },
+              { code: 'MCE024', name: 'ديناميكا هندسية' },
+              { code: 'MCE023', name: 'رسم هندسي وإسقاط (2)' },
+              { code: 'MCE025', name: 'تكنولوجيا الإنتاج والورش' },
+              { code: 'BAS026', name: 'كيمياء هندسية' },
+            ]
+          }
+        }
+      },
+
+      // 1. الهندسة المدنية (48 مقرر)
+      "الهندسة المدنية": {
+        levels: {
+          '100': {
+            term1: [
+              { code: 'CSE111', name: 'تحليل إنشاءات (1)' },
+              { code: 'CWE112', name: 'رسم مدني (1)' },
+              { code: 'ARE113', name: 'مقرر اختياري (1)' },
+              { code: 'BAS114', name: 'جيولوجيا هندسية' },
+              { code: 'CSE115', name: 'مقاومة وتكنولوجيا المواد' },
+              { code: 'UNR116', name: 'كتابة تقارير فنية' }
+            ],
+            term2: [
+              { code: 'ENG121', name: 'تحليلات هندسية' },
+              { code: 'CSE122', name: 'ميكانيكا الإنشاءات' },
+              { code: 'CPE123', name: 'مساحة (1)' },
+              { code: 'CWE124', name: 'رسم مدني (2)' },
+              { code: 'CWE125', name: 'هيدروليكا (1)' },
+              { code: 'UNR126', name: 'حقوق الإنسان ومكافحة الفساد' }
+            ]
+          },
+          '200': {
+            term1: [
+              { code: 'ELE211', name: 'مقرر اختياري (2)' },
+              { code: 'CSE212', name: 'تحليل إنشاءات (2)' },
+              { code: 'UNR213', name: 'أمن وسلامة مهنية' },
+              { code: 'CSE214', name: 'خرسانة مسلحة (1)' },
+              { code: 'CWE215', name: 'هيدروليكا (2)' },
+              { code: 'CPE216', name: 'مساحة (2)' }
+            ],
+            term2: [
+              { code: 'CWE221', name: 'هندسة الري والصرف' },
+              { code: 'CSE222', name: 'خرسانة مسلحة (2)' },
+              { code: 'CSE223', name: 'ميكانيكا التربة والأساسات (1)' },
+              { code: 'CPE224', name: 'هندسة النقل والمرور' },
+              { code: 'CSE225', name: 'تكنولوجيا الخرسانة' },
+              { code: 'MCE226', name: 'مقرر اختياري (3)' }
+            ]
+          },
+          '300': {
+            term1: [
+              { code: 'CSE311', name: 'تحليل إنشاءات (3)' },
+              { code: 'CSE312', name: 'خرسانة مسلحة (3)' },
+              { code: 'CSE313', name: 'منشآت معدنية (1)' },
+              { code: 'CSE314', name: 'هندسة الأساسات' },
+              { code: 'CIE315', name: 'مقرر اختياري (4)' },
+              { code: 'UNR316', name: 'القضايا المجتمعية' }
+            ],
+            term2: [
+              { code: 'CSE321', name: 'منشآت معدنية (2)' },
+              { code: 'CWE322', name: 'تصميم منشآت الري' },
+              { code: 'CPE323', name: 'أعمال تنقية وشبكات مياه الشرب' },
+              { code: 'UNR324', name: 'علم نفس واجتماع صناعي' },
+              { code: 'CIE325', name: 'مقرر اختياري (5)' },
+              { code: 'CIE326', name: 'مقرر اختياري (6)' }
+            ]
+          },
+          '400': {
+            term1: [
+              { code: 'CIE411', name: 'تطبيقات الحاسب الآلي في الهندسة المدنية' },
+              { code: 'CPE412', name: 'شبكات وأعمال معالجة الصرف الصحي' },
+              { code: 'CSE413', name: 'خرسانة مسلحة (4)' },
+              { code: 'CPE414', name: 'هندسة الطرق والمطارات' },
+              { code: 'CIE415', name: 'مقرر اختياري (7)' },
+              { code: 'CIE416', name: 'مشروع التخرج (1)' }
+            ],
+            term2: [
+              { code: 'CSE421', name: 'كباري معدنية' },
+              { code: 'CIE422', name: 'مقرر اختياري (8)' },
+              { code: 'CIE423', name: 'مقرر اختياري (9)' },
+              { code: 'CSE424', name: 'إدارة مشروعات وعقود التشييد' },
+              { code: 'UNR425', name: 'ريادة الأعمال' },
+              { code: 'CIE426', name: 'مشروع التخرج (2)' }
+            ]
+          }
+        }
+      },
+
+      // 2. هندسة الإلكترونيات والاتصالات (48 مقرر)
+      "هندسة الإلكترونيات والاتصالات": {
+        levels: {
+          '100': {
+            term1: [
+              { code: 'EPE111', name: 'الدوائر الكهربية نظرية' },
+              { code: 'MCE112', name: 'مقرر اختياري (1)' },
+              { code: 'ECE113', name: 'إلكترونيات (1)' },
+              { code: 'CIE114', name: 'مقرر اختياري (2)' },
+              { code: 'EPE115', name: 'خواص المواد الكهربية' },
+              { code: 'UNR116', name: 'كتابة تقارير فنية' }
+            ],
+            term2: [
+              { code: 'ENG121', name: 'تحليلات هندسية' },
+              { code: 'ECE122', name: 'مجالات كهربية (1)' },
+              { code: 'EPE123', name: 'رسم كهربي فني' },
+              { code: 'EPE124', name: 'اختبارات كهربية (1)' },
+              { code: 'EPE125', name: 'مقرر اختياري (3)' },
+              { code: 'UNR126', name: 'حقوق الإنسان ومكافحة الفساد' }
+            ]
+          },
+          '200': {
+            term1: [
+              { code: 'EPE211', name: 'تحليلات هندسية متقدمة' },
+              { code: 'EPE212', name: 'آلات كهربية (1)' },
+              { code: 'UNR213', name: 'أمن وسلامة مهنية' },
+              { code: 'ECE214', name: 'إلكترونيات (2)' },
+              { code: 'ECE215', name: 'مجالات كهربية (2)' },
+              { code: 'ECE216', name: 'مقرر اختياري (4)' }
+            ],
+            term2: [
+              { code: 'EPE221', name: 'نظرية التحكم الآلي' },
+              { code: 'EPE222', name: 'قياسات كهربية وإلكترونية' },
+              { code: 'EPE223', name: 'تحليلات الدوائر الكهربية' },
+              { code: 'EPE224', name: 'اختبارات كهربية (2)' },
+              { code: 'ECE225', name: 'نظرية اتصالات' },
+              { code: 'MCE226', name: 'مقرر اختياري (5)' }
+            ]
+          },
+          '300': {
+            term1: [
+              { code: 'ECE311', name: 'مقرر اختياري (6)' },
+              { code: 'ECE312', name: 'تصميم وتحليل الدوائر الإلكترونية' },
+              { code: 'ECE313', name: 'الهوائيات وانتشار الموجات' },
+              { code: 'ECE314', name: 'معالجة الإشارات الرقمية' },
+              { code: 'ECE315', name: 'نظم الاتصالات الرقمية' },
+              { code: 'UNR316', name: 'القضايا المجتمعية' }
+            ],
+            term2: [
+              { code: 'ECE321', name: 'حاسبات ميكروية' },
+              { code: 'ECE322', name: 'نظم الاتصالات الخلوية' },
+              { code: 'ECE323', name: 'اختبارات الإلكترونيات والاتصالات (1)' },
+              { code: 'UNR324', name: 'علم نفس واجتماع صناعي' },
+              { code: 'ECE325', name: 'لغات متقدمة في البرمجة' },
+              { code: 'ECE326', name: 'مقرر اختياري (7)' }
+            ]
+          },
+          '400': {
+            term1: [
+              { code: 'ECE411', name: 'شبكات نقل البيانات' },
+              { code: 'ECE412', name: 'دوائر الموائمة مع الحاسب' },
+              { code: 'ECE413', name: 'نظرية الموجات المتناهية في الصغر' },
+              { code: 'ECE414', name: 'مقرر اختياري (8)' },
+              { code: 'ECE415', name: 'معالجة صور رقمية' },
+              { code: 'ECE416', name: 'مشروع التخرج (1)' }
+            ],
+            term2: [
+              { code: 'ECE421', name: 'اختبارات الإلكترونيات والاتصالات (2)' },
+              { code: 'ECE422', name: 'نظم الاتصالات بالأقمار الصناعية' },
+              { code: 'ECE423', name: 'دوائر متكاملة' },
+              { code: 'UNR425', name: 'ريادة الأعمال' },
+              { code: 'ECE424', name: 'مقرر اختياري (9)' },
+              { code: 'ECE426', name: 'مشروع التخرج (2)' }
+            ]
+          }
+        }
+      },
+
+      // 3. هندسة القوى الميكانيكية (51 مقرر)
+      "الهندسة القوى الميكانيكية": {
+        levels: {
+          '100': {
+            term1: [
+              { code: 'PDE111', name: 'رسم ميكانيكي (1)' },
+              { code: 'PDE112', name: 'هندسة الإنتاج والتصنيع المتقدم' },
+              { code: 'MPE113', name: 'مبادئ الديناميكا الحرارية' },
+              { code: 'PDE114', name: 'خواص واختبارات المواد' },
+              { code: 'CIE115', name: 'مقرر اختياري (1)' },
+              { code: 'UNR116', name: 'كتابة تقارير فنية' },
+              { code: 'ELE117', name: 'مقرر اختياري (2)' }
+            ],
+            term2: [
+              { code: 'PDE121', name: 'رسم ميكانيكي وإنشاء ماكينات' },
+              { code: 'MPE122', name: 'ديناميكا حرارية (1)' },
+              { code: 'PDE123', name: 'تحليل الإجهادات' },
+              { code: 'ENG124', name: 'تحليلات هندسية' },
+              { code: 'PDE125', name: 'نظرية ماكينات' },
+              { code: 'UNR126', name: 'حقوق الإنسان ومكافحة الفساد' }
+            ]
+          },
+          '200': {
+            term1: [
+              { code: 'PDE211', name: 'أساسيات التصميم الميكانيكي' },
+              { code: 'ELE212', name: 'مقرر اختياري (3)' },
+              { code: 'UNR213', name: 'أمن وسلامة مهنية' },
+              { code: 'PDE214', name: 'مقرر اختياري (4)' },
+              { code: 'MPE215', name: 'مبادئ ميكانيكا الموائع' },
+              { code: 'MME216', name: 'مبادئ التحكم الآلي' }
+            ],
+            term2: [
+              { code: 'PDE221', name: 'تصميم أجزاء الماكينات' },
+              { code: 'MPE222', name: 'ميكانيكا موائع (1)' },
+              { code: 'MPE223', name: 'تحليلات هندسية متقدمة' },
+              { code: 'MPE224', name: 'مبادئ انتقال حرارة' },
+              { code: 'MME225', name: 'لغات البرمجة وتطبيقاتها' },
+              { code: 'MME226', name: 'قياسات وأجهزة القياس' }
+            ]
+          },
+          '300': {
+            term1: [
+              { code: 'MPE311', name: 'مقرر اختياري (5)' },
+              { code: 'MPE312', name: 'ديناميكا الغازات' },
+              { code: 'MPE313', name: 'انتقال الحرارة والكتلة' },
+              { code: 'MPE314', name: 'هندسة الآلات الحرارية' },
+              { code: 'MPE315', name: 'مقرر اختياري (6)' },
+              { code: 'UNR316', name: 'القضايا المجتمعية' },
+              { code: 'PDE317', name: 'الاهتزازات الميكانيكية' }
+            ],
+            term2: [
+              { code: 'MPE321', name: 'حسابات نظم ومواسير' },
+              { code: 'MPE322', name: 'مقرر اختياري (7)' },
+              { code: 'MPE323', name: 'محركات الاحتراق الداخلي (1)' },
+              { code: 'UNR324', name: 'علم نفس واجتماع صناعي' },
+              { code: 'MPE325', name: 'آلات توربينية (1)' },
+              { code: 'MPE326', name: 'مقرر اختياري (8)' }
+            ]
+          },
+          '400': {
+            term1: [
+              { code: 'MPE411', name: 'تبريد' },
+              { code: 'MPE412', name: 'محطات توليد الطاقة التقليدية' },
+              { code: 'MPE413', name: 'مقرر اختياري (9)' },
+              { code: 'MPE414', name: 'محركات الاحتراق الداخلي (2)' },
+              { code: 'MPE415', name: 'آلات توربينية (2)' },
+              { code: 'MPE416', name: 'مقرر اختياري (10)' },
+              { code: 'MPE417', name: 'مشروع التخرج (1)' }
+            ],
+            term2: [
+              { code: 'MPE421', name: 'تكييف الهواء' },
+              { code: 'MPE422', name: 'محطات توليد الطاقة المتجددة' },
+              { code: 'MPE423', name: 'معامل هندسة القوى الميكانيكية' },
+              { code: 'MPE424', name: 'مقرر اختياري (11)' },
+              { code: 'UNR425', name: 'ريادة أعمال' },
+              { code: 'MPE426', name: 'مشروع التخرج (2)' }
+            ]
+          }
+        }
+      },
+
+      // 4. الهندسة الكهربية (48 مقرر)
+      "الهندسة الكهربية": {
+        levels: {
+          '100': {
+            term1: [
+              { code: 'EPE111', name: 'الدوائر الكهربية نظرية' },
+              { code: 'MCE112', name: 'مقرر اختياري (1)' },
+              { code: 'ECE113', name: 'إلكترونيات (1)' },
+              { code: 'CIE114', name: 'مقرر اختياري (2)' },
+              { code: 'EPE115', name: 'خواص المواد الكهربية' },
+              { code: 'UNR116', name: 'كتابة تقارير فنية' }
+            ],
+            term2: [
+              { code: 'ENG121', name: 'تحليلات هندسية' },
+              { code: 'ECE122', name: 'مجالات كهربية (1)' },
+              { code: 'EPE123', name: 'رسم كهربي فني' },
+              { code: 'EPE124', name: 'اختبارات كهربية (1)' },
+              { code: 'EPE125', name: 'مقرر اختياري (3)' },
+              { code: 'UNR126', name: 'حقوق الإنسان ومكافحة الفساد' }
+            ]
+          },
+          '200': {
+            term1: [
+              { code: 'EPE211', name: 'تحليلات هندسية متقدمة' },
+              { code: 'EPE212', name: 'آلات كهربية (1)' },
+              { code: 'UNR213', name: 'أمن وسلامة مهنية' },
+              { code: 'ECE214', name: 'إلكترونيات (2)' },
+              { code: 'ECE215', name: 'مجالات كهربية (2)' },
+              { code: 'ECE216', name: 'مقرر اختياري (4)' }
+            ],
+            term2: [
+              { code: 'EPE221', name: 'نظرية التحكم الآلي' },
+              { code: 'EPE222', name: 'قياسات كهربية وإلكترونية' },
+              { code: 'EPE223', name: 'تحليلات الدوائر الكهربية' },
+              { code: 'EPE224', name: 'اختبارات كهربية (2)' },
+              { code: 'ECE225', name: 'نظرية اتصالات' },
+              { code: 'MCE226', name: 'مقرر اختياري (5)' }
+            ]
+          },
+          '300': {
+            term1: [
+              { code: 'EPE311', name: 'التحكم الرقمي' },
+              { code: 'EPE312', name: 'آلات كهربية (2)' },
+              { code: 'EPE313', name: 'التركيبات الكهربية' },
+              { code: 'EPE314', name: 'نظم القوى الكهربية' },
+              { code: 'EPE315', name: 'مقرر اختياري (6)' },
+              { code: 'UNR316', name: 'القضايا المجتمعية' }
+            ],
+            term2: [
+              { code: 'EPE321', name: 'إلكترونيات القوى (1)' },
+              { code: 'EPE322', name: 'المعالجات القابلة للبرمجة وتطبيقاتها (PLC)' },
+              { code: 'EPE323', name: 'اختبارات كهربية (3)' },
+              { code: 'UNR324', name: 'علم نفس واجتماع صناعي' },
+              { code: 'ECE325', name: 'مقرر اختياري (7)' },
+              { code: 'EPE326', name: 'هندسة الجهد الفائق' }
+            ]
+          },
+          '400': {
+            term1: [
+              { code: 'EPE411', name: 'تحليل شبكات القوى الكهربية' },
+              { code: 'EPE412', name: 'آلات كهربية خاصة' },
+              { code: 'EPE413', name: 'إلكترونيات القوى (2)' },
+              { code: 'EPE414', name: 'تحويل واستخدام الطاقة' },
+              { code: 'EPE415', name: 'مقرر اختياري (8)' },
+              { code: 'EPE416', name: 'مشروع التخرج (1)' }
+            ],
+            term2: [
+              { code: 'EPE422', name: 'اختبارات كهربية (4)' },
+              { code: 'EPE423', name: 'هندسة الوقاية والقطع' },
+              { code: 'EPE424', name: 'التحكم في نظم القوى الكهربية' },
+              { code: 'UNR425', name: 'ريادة الأعمال' },
+              { code: 'EPE426', name: 'مقرر اختياري (9)' },
+              { code: 'EPE421', name: 'مشروع التخرج (2)' }
+            ]
+          }
+        }
+      }
+    };
+
+    // ================= 3. نظام التخزين والمزامنة المشتركة (LocalStorage) =================
+    const STORAGE_KEY = 'ENGINEER_HUB_PDFS_2026';
+
+    let uploadedPdfs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+      { id: 1, fileTitle: 'المحاضرة الأولى - رياضيات (1)', subject: 'BAS011 - رياضيات (1) - جبر وتفاضل', code: 'BAS011', subjectName: 'رياضيات (1)', dept: 'إعدادي هندسة', term: 'الترم الأول', type: 'محاضرة', date: '2026/03/01', link: 'https://example.com/file1.pdf' },
+      { id: 2, fileTitle: 'شيت مسائل الهوائيات وانتشار الموجات #1', subject: 'ECE313 - الهوائيات وانتشار الموجات', code: 'ECE313', subjectName: 'الهوائيات وانتشار الموجات', dept: 'هندسة الإلكترونيات والاتصالات', term: 'الترم الأول', type: 'سكشن', date: '2026/02/28', link: 'https://example.com/file2.pdf' },
+      { id: 3, fileTitle: 'المحاضرة الأولى - مبادئ انتقال حرارة', subject: 'MPE224 - مبادئ انتقال حرارة', code: 'MPE224', subjectName: 'مبادئ انتقال حرارة', dept: 'الهندسة القوى الميكانيكية', term: 'الترم الثاني', type: 'محاضرة', date: '2026/02/27', link: 'https://example.com/file3.pdf' },
+      { id: 4, fileTitle: 'مذكرة التركيبات الكهربية الشاملة', subject: 'EPE313 - التركيبات الكهربية', code: 'EPE313', subjectName: 'التركيبات الكهربية', dept: 'الهندسة الكهربية', term: 'الترم الأول', type: 'ملخص', date: '2026/02/25', link: 'https://example.com/file4.pdf' }
+    ];
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(uploadedPdfs));
+      } catch (err) {
+        console.warn('LocalStorage quota limit reached for large file storage:', err);
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn px-6 py-2.5 rounded-full text-xs font-bold ios-btn text-slate-300 hover:text-white transition flex items-center gap-2';
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      activeBtn.className = 'tab-btn px-6 py-2.5 rounded-full text-xs font-bold bg-white text-slate-900 shadow-lg transition flex items-center gap-2';
+    }
+
+    // فتح النافذة وتطبيق ألوان وهوية المرحلة المختارة
+    function openAddPdfModal(deptName) {
+      document.getElementById('pdf-dept').value = deptName;
+      document.getElementById('modal-dept-title').textContent = deptName;
+
+      // إخفاء أو إظهار فلتر المستويات (إعدادي هندسة لا تحتاج مستويات 100-400)
+      const lvlFilterBox = document.getElementById('level-filter-box');
+      if (deptName === 'إعدادي هندسة') {
+        lvlFilterBox.classList.add('hidden');
+      } else {
+        lvlFilterBox.classList.remove('hidden');
+      }
+
+      const theme = deptThemes[deptName] || deptThemes["الهندسة المدنية"];
+
+      const modalCard = document.getElementById('modal-card-box');
+      modalCard.className = `ios-glass max-w-lg w-full rounded-[32px] p-6 sm:p-8 relative border ${theme.modalBorder} shadow-2xl max-h-[90vh] overflow-y-auto transition-all duration-300`;
+
+      const iconContainer = document.getElementById('modal-dept-icon');
+      iconContainer.className = theme.iconBoxClass;
+      iconContainer.innerHTML = `<i class="${theme.icon}"></i>`;
+
+      const titleElem = document.getElementById('modal-dept-title');
+      titleElem.className = theme.titleClass;
+
+      document.querySelectorAll('.term-radio-box').forEach(box => {
+        box.className = `term-radio-box p-3 rounded-2xl border border-white/15 bg-white/5 text-center text-xs font-bold text-slate-300 transition flex items-center justify-center gap-2 ${theme.radioActiveClass}`;
+      });
+
+      document.getElementById('upload-icon-element').className = theme.dropzoneIconClass;
+      document.getElementById('submit-pdf-btn').className = theme.btnClass;
+
+      document.getElementById('file-chosen-text').textContent = 'اضغط لاختيار ملف من جهازك (PDF)';
+      document.getElementById('local-pdf-file').value = '';
+      
+      updateSubjectOptions();
+      toggleModal('add-pdf-modal');
+    }
+
+    function onTermChange() {
+      updateSubjectOptions();
+    }
+
+    // تعبئة قائمة المواد ديناميكياً بناءً على القسم والترم والمستوى
+    function updateSubjectOptions() {
+      const dept = document.getElementById('pdf-dept').value;
+      const termKey = document.querySelector('input[name="termSelection"]:checked').value;
+      const lvlFilter = document.getElementById('pdf-level-filter').value;
+      const selectElem = document.getElementById('pdf-subject');
+      
+      selectElem.innerHTML = '';
+      const deptData = departmentCurricula[dept];
+
+      if (deptData && deptData.levels) {
+        Object.keys(deptData.levels).forEach(lvl => {
+          if (dept === 'إعدادي هندسة' || lvlFilter === 'all' || lvlFilter === lvl) {
+            const list = deptData.levels[lvl][termKey] || [];
+            if (list.length > 0) {
+              const optGroup = document.createElement('optgroup');
+              optGroup.label = dept === 'إعدادي هندسة' ? `--- الفرقة الإعدادية ---` : `--- مستوى ${lvl} ---`;
+              list.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = `${sub.code} - ${sub.name}`;
+                opt.textContent = `${sub.code} | ${sub.name}`;
+                optGroup.appendChild(opt);
+              });
+              selectElem.appendChild(optGroup);
+            }
+          }
+        });
+      }
+
+      const customOpt = document.createElement('option');
+      customOpt.value = 'مادة أخرى / إضافة عامة';
+      customOpt.textContent = '➕ مقرر آخر / إضافة عامة';
+      selectElem.appendChild(customOpt);
+    }
+
+    function updateFileLabel(input) {
+      const label = document.getElementById('file-chosen-text');
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        label.innerHTML = `📄 <span class="font-bold text-white">${file.name}</span> (${sizeMB} MB)`;
+      } else {
+        label.textContent = 'اضغط لاختيار ملف من جهازك (PDF)';
+      }
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function handlePdfSubmit(e) {
+      e.preventDefault();
+
+      const dept = document.getElementById('pdf-dept').value;
+      const termRadio = document.querySelector('input[name="termSelection"]:checked').value;
+      const termText = termRadio === 'term1' ? 'الترم الأول' : 'الترم الثاني';
+      const subjectValue = document.getElementById('pdf-subject').value;
+      const fileTitle = document.getElementById('pdf-title').value.trim();
+      const type = document.getElementById('pdf-type').value;
+      const linkInput = document.getElementById('pdf-url-link').value.trim();
+      const localFileInput = document.getElementById('local-pdf-file');
+
+      let subjectCode = '';
+      let subjectName = subjectValue;
+      const parts = subjectValue.split(' - ');
+      if (parts.length >= 2) {
+        subjectCode = parts[0].trim();
+        subjectName = parts.slice(1).join(' - ').trim();
+      }
+
+      const saveAndFinish = (finalLink) => {
+        const newPdf = {
+          id: Date.now(),
+          fileTitle: fileTitle,
+          subject: subjectValue,
+          code: subjectCode,
+          subjectName: subjectName,
+          dept: dept,
+          term: termText,
+          type: type,
+          date: new Date().toLocaleDateString('ar-EG'),
+          link: finalLink
+        };
+
+        uploadedPdfs.unshift(newPdf);
+        saveToStorage();
+        renderTable(uploadedPdfs);
+        toggleModal('add-pdf-modal');
+        e.target.reset();
+        document.getElementById('file-chosen-text').textContent = 'اضغط لاختيار ملف من جهازك (PDF)';
+        showToast(`🎉 تم حفظ ونشر (${fileTitle}) لمقرر ${subjectValue}!`);
+      };
+
+      if (localFileInput.files && localFileInput.files[0]) {
+        const file = localFileInput.files[0];
+        if (file.size <= 4.5 * 1024 * 1024) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            saveAndFinish(evt.target.result);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          const objUrl = URL.createObjectURL(file);
+          saveAndFinish(linkInput || objUrl);
+        }
+      } else {
+        saveAndFinish(linkInput || '#');
+      }
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('lecturesTableBody');
+      tbody.innerHTML = '';
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400">لا توجد ملفات مطابقة للبحث</td></tr>`;
+        return;
+      }
+
+      list.forEach(item => {
+        const typeColor = item.type === 'محاضرة' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' :
+                          item.type === 'سكشن' ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' :
+                          item.type === 'ملخص' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                          'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-white/[0.04] transition';
+        row.innerHTML = `
+          <td class="p-4 font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-file-pdf text-cyan-400 text-sm"></i>
+            <span>${item.fileTitle}</span>
+          </td>
+          <td class="p-4 font-bold text-cyan-300">${item.subject}</td>
+          <td class="p-4 text-slate-300">${item.dept}</td>
+          <td class="p-4">
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">${item.term}</span>
+          </td>
+          <td class="p-4">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${typeColor}">${item.type}</span>
+          </td>
+          <td class="p-4 text-slate-400 text-[11px]">${item.date}</td>
+          <td class="p-4 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <a href="${item.link}" target="_blank" download="${item.fileTitle}.pdf" class="p-2 rounded-xl hover:bg-white/10 text-cyan-300 transition" title="تحميل / معاينة"><i class="fa-solid fa-download"></i></a>
+              <button onclick="deletePdf(${item.id})" class="p-2 rounded-xl hover:bg-rose-500/20 text-rose-400 transition" title="حذف"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('stat-files').textContent = uploadedPdfs.length;
+    }
+
+    function filterLectures() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const dept = document.getElementById('filterDept').value;
+      const term = document.getElementById('filterTerm').value;
+
+      const filtered = uploadedPdfs.filter(item => {
+        const matchesQuery = item.fileTitle.toLowerCase().includes(q) || item.subject.toLowerCase().includes(q) || (item.code && item.code.toLowerCase().includes(q));
+        const matchesDept = (dept === 'all' || item.dept === dept);
+        const matchesTerm = (term === 'all' || item.term === term);
+        return matchesQuery && matchesDept && matchesTerm;
+      });
+
+      renderTable(filtered);
+    }
+
+    function deletePdf(id) {
+      if (confirm('هل أنت متأكد من رغبتك في حذف هذا الملف من المنظومة؟')) {
+        uploadedPdfs = uploadedPdfs.filter(i => i.id !== id);
+        saveToStorage();
+        renderTable(uploadedPdfs);
+        showToast('🗑️ تم حذف الملف بنجاح.');
+      }
+    }
+
+    function postAnnouncement(e) {
+      e.preventDefault();
+      const title = document.getElementById('announce-title').value;
+      const target = document.getElementById('announce-target').value;
+      const body = document.getElementById('announce-body').value;
+
+      const container = document.getElementById('announcements-list');
+      const item = document.createElement('div');
+      item.className = 'ios-glass p-4 rounded-2xl flex items-start justify-between border-r-4 border-r-cyan-400';
+      item.innerHTML = `
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-white">${title}</span>
+            <span class="text-[9px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full font-bold">${target}</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">${body}</p>
+          <span class="text-[10px] text-slate-400 block pt-1">الآن • مشرف المنصة</span>
+        </div>
+        <button onclick="this.parentElement.remove(); showToast('🗑️ تم حذف الإعلان');" class="text-slate-400 hover:text-rose-400 p-2"><i class="fa-regular fa-trash-can"></i></button>
+      `;
+      container.prepend(item);
+      e.target.reset();
+      showToast('📢 تم نشر الإعلان للطلاب بنجاح!');
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'ios-glass px-4 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2.5 shadow-2xl border border-white/25 transition-all duration-300';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-cyan-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTable(uploadedPdfs);
+    });
+  </script>
+</body>
+</html>

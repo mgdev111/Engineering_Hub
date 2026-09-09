@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة الدخول والتسجيل | Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متدرجة سائلة حية (Rose & Orange & Amber) */
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.26) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.24) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(234, 179, 8, 0.18) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(225, 29, 72, 0.22) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.16) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* تأثير الزجاج الشفاف الفائق */
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(244, 63, 94, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .custom-input {
+      background: #0d1322 !important;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff !important;
+      transition: all 0.25s ease;
+    }
+
+    .custom-input:focus {
+      background: #111827 !important;
+      border-color: #f43f5e;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.35);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between items-center p-4">
+  
+  <div class="ios-mesh-bg"></div>
+
+  <!-- حاوية الإشعارات (Toasts) -->
+  <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+
+  <!-- رأس الصفحة -->
+  <header class="w-full max-w-md relative z-10 flex items-center justify-between py-4">
+    <a href="index.html" class="px-4 py-2 rounded-full ios-btn text-slate-300 hover:text-white text-xs font-bold flex items-center gap-2">
+      <i class="fa-solid fa-arrow-right text-xs"></i>
+      <span>الرئيسية</span>
+    </a>
+
+    <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-500/10 border border-rose-400/20 text-rose-300 text-xs font-bold">
+      <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+      <span id="header-status-text">بوابة الطلاب والمشرفين</span>
+    </div>
+  </header>
+
+  <!-- كارت الدخول والتسجيل الرئيسي -->
+  <main class="relative z-10 w-full max-w-md my-auto">
+    <div class="ios-glass rounded-[36px] p-7 sm:p-9 border border-white/20 relative shadow-2xl space-y-6">
+      
+      <!-- شعار وعنوان الصفحة التفاعلي -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex w-16 h-16 rounded-3xl bg-gradient-to-tr from-rose-500/30 via-orange-600/30 to-amber-500/30 border border-rose-400/40 items-center justify-center text-white shadow-xl shadow-rose-500/20 backdrop-blur-lg mb-1">
+          <i class="fa-solid fa-fire-flame-curved text-2xl text-rose-300"></i>
+        </div>
+        
+        <div>
+          <h1 id="form-main-title" class="text-2xl font-black tracking-wide bg-gradient-to-r from-white via-rose-100 to-orange-300 bg-clip-text text-transparent">
+            تسجيل الدخول
+          </h1>
+          <p id="form-sub-title" class="text-xs text-slate-400 font-medium mt-1">أدخل بياناتك للوصول إلى مقررات المنصة</p>
+        </div>
+      </div>
+
+      <!-- زر الدخول المباشر بحساب Google -->
+      <button 
+        type="button" 
+        onclick="signInWithGoogle()" 
+        id="google-btn"
+        class="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs shadow-xl transition-all duration-200 flex items-center justify-center gap-3 active:scale-[0.98]"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+          <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.5s.7 4.8 1.9 7.2l3.7-2.9z"/>
+          <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+        </svg>
+        <span>المتابعة السريعة باستخدام حساب Google</span>
+      </button>
+
+      <!-- فاصل أنيق -->
+      <div class="flex items-center gap-3 my-1">
+        <div class="h-[1px] flex-1 bg-white/10"></div>
+        <span class="text-[11px] text-slate-400 font-bold">أو باستخدام البريد الإلكتروني</span>
+        <div class="h-[1px] flex-1 bg-white/10"></div>
+      </div>
+
+      <!-- نموذج البيانات التفاعلي -->
+      <form onsubmit="handleFormSubmit(event)" class="space-y-3.5">
+        
+        <!-- حقل الاسم الكامل (يظهر في إنشاء الحساب) -->
+        <div id="name-field-group" class="space-y-1.5 hidden">
+          <label class="block text-xs font-bold text-slate-300 mr-1">الاسم الكامل</label>
+          <div class="relative">
+            <i class="fa-solid fa-id-card absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input 
+              type="text" 
+              id="user-fullname" 
+              placeholder="مثال: م/ أحمد علي" 
+              class="custom-input w-full pr-11 pl-4 py-3 rounded-2xl text-xs"
+            >
+          </div>
+        </div>
+
+        <!-- حقل البريد -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-300 mr-1">عنوان البريد الإلكتروني (Gmail)</label>
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input 
+              type="email" 
+              id="user-email" 
+              required 
+              dir="ltr"
+              placeholder="example@gmail.com" 
+              class="custom-input w-full pr-11 pl-4 py-3 rounded-2xl text-xs text-left"
+            >
+          </div>
+        </div>
+
+        <!-- حقل كلمة المرور -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between mr-1">
+            <label class="block text-xs font-bold text-slate-300">كلمة المرور</label>
+            <span id="pwd-hint" class="text-[10px] text-slate-400 hidden">(6 خانات على الأقل)</span>
+          </div>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input 
+              type="password" 
+              id="user-password" 
+              required 
+              minlength="6"
+              dir="ltr"
+              placeholder="••••••••" 
+              class="custom-input w-full pr-11 pl-11 py-3 rounded-2xl text-xs text-left tracking-wider"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('user-password', 'toggle-pwd-icon')" 
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-300 transition"
+            >
+              <i id="toggle-pwd-icon" class="fa-solid fa-eye-slash text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- حقل تأكيد كلمة المرور (يظهر في إنشاء الحساب) -->
+        <div id="confirm-pwd-group" class="space-y-1.5 hidden">
+          <label class="block text-xs font-bold text-slate-300 mr-1">تأكيد كلمة المرور</label>
+          <div class="relative">
+            <i class="fa-solid fa-shield-check absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input 
+              type="password" 
+              id="user-confirm-password" 
+              minlength="6"
+              dir="ltr"
+              placeholder="••••••••" 
+              class="custom-input w-full pr-11 pl-11 py-3 rounded-2xl text-xs text-left tracking-wider"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('user-confirm-password', 'toggle-confirm-icon')" 
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-300 transition"
+            >
+              <i id="toggle-confirm-icon" class="fa-solid fa-eye-slash text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- زر الإرسال الرئيسي -->
+        <button 
+          type="submit" 
+          id="submit-action-btn"
+          class="w-full py-3.5 mt-2 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-xl shadow-rose-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2"
+        >
+          <span id="btn-text">تسجيل الدخول</span>
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </button>
+      </form>
+
+      <!-- صندوق رسالة التأكيد عبر Gmail -->
+      <div id="verification-notice" class="p-4 rounded-2xl bg-rose-500/15 border border-rose-400/30 text-center space-y-2 hidden">
+        <div class="w-10 h-10 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center mx-auto text-lg">
+          <i class="fa-solid fa-envelope-circle-check"></i>
+        </div>
+        <h4 class="text-xs font-bold text-white">تأكيد البريد الإلكتروني مطلوب</h4>
+        <p class="text-[11px] text-rose-200/90 leading-relaxed">
+          أرسلنا رابط تفعيل إلى بريدك الإلكتروني. تفقد Gmail واضغط على الرابط لتفعيل الحساب ثم قم بتسجيل الدخول.
+        </p>
+        <button type="button" onclick="resendVerificationLink()" class="text-[11px] text-orange-300 hover:underline font-bold">
+          إعادة إرسال رسالة التفعيل 🔄
+        </button>
+      </div>
+
+      <!-- رابط التبديل (إنشاء حساب من تحت) -->
+      <div class="pt-3 border-t border-white/10 text-center">
+        <p id="toggle-auth-prompt" class="text-xs text-slate-400">
+          ليس لديك حساب؟ 
+          <button 
+            type="button" 
+            onclick="toggleAuthMode(true)" 
+            class="text-rose-400 hover:text-orange-300 font-extrabold underline mr-1 transition"
+          >
+            إنشاء حساب جديد
+          </button>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="relative z-10 w-full max-w-md text-center py-4 text-[11px] text-slate-500">
+    <p>منصة Engineer Hub 2026 • كلية الهندسة جامعة قنا</p>
+  </footer>
+
+  <!-- ================= سكريبت Firebase (Auth + Firestore Users & Admins) ================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithPopup, 
+      GoogleAuthProvider,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    // استدعاء Firestore لحفظ بيانات الطلاب والتحقق من الأدمن
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoMh9_Cd72KU8ApjjMe2GSvPtH8CgkuOY",
+      authDomain: "engineering-hub-aa378.firebaseapp.com",
+      projectId: "engineering-hub-aa378",
+      storageBucket: "engineering-hub-aa378.firebasestorage.app",
+      messagingSenderId: "837394827967",
+      appId: "1:837394827967:web:bdf9490a1cc74fdc90140a",
+      measurementId: "G-F7K6JLN3EF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    auth.languageCode = 'ar';
+    const googleProvider = new GoogleAuthProvider();
+
+    let isSignUpMode = false;
+    let currentUserUnverified = null;
+
+    // 1. فحص هل الإيميل مسجل كـ admin في Firebase Firestore
+    async function checkIsAdminFromFirebase(email) {
+      if (!email) return false;
+      try {
+        const cleanEmail = email.trim().toLowerCase();
+        const adminDocRef = doc(db, "admins", cleanEmail);
+        const adminDoc = await getDoc(adminDocRef);
+        return adminDoc.exists() && adminDoc.data().role === "admin";
+      } catch (err) {
+        console.error("Firestore Check Error:", err);
+        return false;
+      }
+    }
+
+    // 🌟 2. دالة حفظ وتسجيل بيانات الطالب في مجموعة users داخل فايربيس
+    async function saveUserToFirestore(user, customName = null, authProvider = "password") {
+      if (!user || !user.email) return;
+      try {
+        const cleanEmail = user.email.trim().toLowerCase();
+        const userDocRef = doc(db, "users", cleanEmail);
+        
+        // التحقق من الرتبة الحالية
+        const isAdmin = await checkIsAdminFromFirebase(cleanEmail);
+        
+        // بيانات الطالب
+        const userData = {
+          uid: user.uid,
+          email: cleanEmail,
+          fullName: customName || user.displayName || "مهندس / طالب جديد",
+          photoURL: user.photoURL || null,
+          provider: authProvider,
+          role: isAdmin ? "admin" : "student",
+          emailVerified: user.emailVerified,
+          lastLogin: new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }),
+          createdAt: user.metadata?.creationTime || new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' })
+        };
+
+        // حفظ وتحديث بيانات المستخدم بدون مسح البيانات السابقة
+        await setDoc(userDocRef, userData, { merge: true });
+        console.log("✅ تم حفظ بيانات الطالب في Firestore بنجاح:", cleanEmail);
+
+      } catch (err) {
+        console.error("❌ خطأ أثناء حفظ بيانات الطالب في فايربيس:", err);
+      }
+    }
+
+    // 3. توجيه المستخدم حسب رتبته في فايربيس
+    async function routeUserAfterAuth(user) {
+      const isAdmin = await checkIsAdminFromFirebase(user.email);
+      if (isAdmin) {
+        showToast('👑 تم التعرف عليك كـ مشرف للمنصة! جارٍ فتح لوحة الإدارة...');
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 1200);
+      } else {
+        showToast(`🎉 مرحباً بك يا باشمهندس (${user.displayName || ''})! جارٍ نقلك للرئيسية...`);
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1200);
+      }
+    }
+
+    // 4. التبديل بين تسجيل الدخول وإنشاء الحساب
+    window.toggleAuthMode = function(toSignUp) {
+      isSignUpMode = toSignUp;
+      const title = document.getElementById('form-main-title');
+      const subTitle = document.getElementById('form-sub-title');
+      const nameGroup = document.getElementById('name-field-group');
+      const confirmGroup = document.getElementById('confirm-pwd-group');
+      const pwdHint = document.getElementById('pwd-hint');
+      const btnText = document.getElementById('btn-text');
+      const togglePrompt = document.getElementById('toggle-auth-prompt');
+
+      document.getElementById('verification-notice').classList.add('hidden');
+
+      if (isSignUpMode) {
+        title.textContent = 'إنشاء حساب جديد';
+        subTitle.textContent = 'انضم إلى المنظومة وفعّل حسابك عبر Gmail';
+        nameGroup.classList.remove('hidden');
+        confirmGroup.classList.remove('hidden');
+        pwdHint.classList.remove('hidden');
+        btnText.textContent = 'إنشاء الحساب وإرسال رابط التفعيل';
+        togglePrompt.innerHTML = `
+          لديك حساب بالفعل؟ 
+          <button type="button" onclick="toggleAuthMode(false)" class="text-rose-400 hover:text-orange-300 font-extrabold underline mr-1 transition">
+            تسجيل الدخول
+          </button>
+        `;
+      } else {
+        title.textContent = 'تسجيل الدخول';
+        subTitle.textContent = 'أدخل بياناتك للوصول إلى مقررات المنصة';
+        nameGroup.classList.add('hidden');
+        confirmGroup.classList.add('hidden');
+        pwdHint.classList.add('hidden');
+        btnText.textContent = 'تسجيل الدخول';
+        togglePrompt.innerHTML = `
+          ليس لديك حساب؟ 
+          <button type="button" onclick="toggleAuthMode(true)" class="text-rose-400 hover:text-orange-300 font-extrabold underline mr-1 transition">
+            إنشاء حساب جديد
+          </button>
+        `;
+      }
+    };
+
+    // 5. معالجة النموذج (إنشاء حساب أو تسجيل دخول)
+    window.handleFormSubmit = async function(e) {
+      e.preventDefault();
+
+      if (window.location.protocol === 'file:') {
+        showToast('⚠️ شغل الصفحة عبر Live Server في VS Code وليس بالضغط المباشر على الملف.');
+        return;
+      }
+
+      const email = document.getElementById('user-email').value.trim();
+      const password = document.getElementById('user-password').value.trim();
+      const submitBtn = document.getElementById('submit-action-btn');
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>جارٍ المعالجة...</span>`;
+
+      // ================= أ) وضع إنشاء الحساب =================
+      if (isSignUpMode) {
+        const fullname = document.getElementById('user-fullname').value.trim();
+        const confirmPassword = document.getElementById('user-confirm-password').value.trim();
+
+        if (password !== confirmPassword) {
+          showToast('❌ كلمتا المرور غير متطابقتين!');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>إنشاء الحساب وإرسال رابط التفعيل</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
+          return;
+        }
+
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const user = userCredential.user;
+
+          if (fullname) {
+            await updateProfile(user, { displayName: fullname });
+          }
+
+          // حفظ بيانات الطالب فوراً في فايربيس (مجموعة users)
+          await saveUserToFirestore(user, fullname, "password");
+
+          // إرسال رسالة التأكيد إلى Gmail
+          await sendEmailVerification(user);
+          currentUserUnverified = user;
+
+          document.getElementById('verification-notice').classList.remove('hidden');
+          showToast('📨 تم إنشاء الحساب بنجاح! تفقد صندوق بريدك لتأكيده.');
+          toggleAuthMode(false);
+          document.getElementById('verification-notice').classList.remove('hidden');
+
+        } catch (error) {
+          if (error.code === 'auth/email-already-in-use') {
+            showToast('⚠️ هذا البريد مسجل مسبقاً! قم بتسجيل الدخول مباشرة.');
+            toggleAuthMode(false);
+          } else {
+            showToast('❌ تعذر إنشاء الحساب: ' + error.message);
+          }
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>تسجيل الدخول</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
+        }
+      } 
+      // ================= ب) وضع تسجيل الدخول =================
+      else {
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const user = userCredential.user;
+
+          // تحديث بيانات تسجيل دخوله في فايربيس
+          await saveUserToFirestore(user, null, "password");
+
+          // فحص هل ضغط على الرابط في Gmail أم لا
+          if (!user.emailVerified) {
+            currentUserUnverified = user;
+            document.getElementById('verification-notice').classList.remove('hidden');
+            showToast('⚠️ حسابك غير مفعل بعد! افتح رسالة Gmail واضغط على رابط التفعيل.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span>تسجيل الدخول</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
+            return;
+          }
+
+          // تم التحقق والتفعيل -> توجيه المستخدم
+          await routeUserAfterAuth(user);
+
+        } catch (error) {
+          if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+            showToast('❌ البريد أو كلمة المرور غير صحيحة.');
+          } else {
+            showToast('❌ خطأ: ' + error.message);
+          }
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>تسجيل الدخول</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
+        }
+      }
+    };
+
+    // 6. تسجيل الدخول بجوجل وحفظ بياناته في users
+    window.signInWithGoogle = async function() {
+      if (window.location.protocol === 'file:') {
+        showToast('⚠️ شغل الصفحة عبر Live Server في VS Code.');
+        return;
+      }
+
+      const btn = document.getElementById('google-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-sm"></i> <span>جارٍ الاتصال بجوجل...</span>`;
+
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+
+        // حفظ وتحديث بيانات حساب جوجل تلقائياً في فايربيس (مجموعة users)
+        await saveUserToFirestore(user, user.displayName, "google");
+
+        await routeUserAfterAuth(user);
+      } catch (error) {
+        showToast('❌ خطأ: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = `<span>المتابعة السريعة باستخدام حساب Google</span>`;
+      }
+    };
+
+    // 7. إعادة إرسال رابط التفعيل
+    window.resendVerificationLink = async function() {
+      if (currentUserUnverified) {
+        try {
+          await sendEmailVerification(currentUserUnverified);
+          showToast('📨 تم إعادة إرسال رابط التفعيل إلى بريدك الإلكتروني.');
+        } catch (err) {
+          showToast('❌ خطأ أثناء الإرسال: ' + err.message);
+        }
+      } else {
+        showToast('⚠️ اكتب بريدك وكلمة المرور واضغط تسجيل الدخول أولاً.');
+      }
+    };
+
+    // إظهار/إخفاء كلمة المرور
+    window.togglePasswordVisibility = function(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-solid fa-eye text-xs text-rose-400';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-solid fa-eye-slash text-xs';
+      }
+    };
+
+    // الإشعارات المنبثقة
+    window.showToast = function(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'ios-glass px-4 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2.5 shadow-2xl border border-rose-400/30 transition-all duration-300';
+      toast.innerHTML = `<i class="fa-solid fa-fire-flame-curved text-rose-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    };
+  </script>
+
+</body>
+</html>

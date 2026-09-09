@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إعدادي هندسة | 📐 Preparatory Year - Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    *:focus, *:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متدرجة سائلة باللون الكهرماني/الذهبي الخاص بإعدادي هندسة */
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(251, 191, 36, 0.22) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(217, 119, 6, 0.18) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(180, 83, 9, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.16) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* تأثير الزجاج الشفاف الفائق (Liquid Glass) */
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(245, 158, 11, 0.45);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(245, 158, 11, 0.45);
+      transform: scale(1.02);
+    }
+
+    /* شريط التمرير */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <!-- خلفية الألوان الانسيابية -->
+  <div class="ios-mesh-bg"></div>
+
+  <!-- حاوية الإشعارات -->
+  <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-18 py-3 flex items-center justify-between">
+      
+      <!-- الشعار وهوية الفرقة الإعدادية -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500/30 to-yellow-600/40 border border-white/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md hover:scale-105 transition">
+          <i class="fa-solid fa-shapes text-lg text-amber-300"></i>
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-amber-300 bg-clip-text text-transparent">
+              الفرقة الإعدادية
+            </span>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">PREP</span>
+          </div>
+          <p class="text-[11px] text-slate-400">📐 Preparatory Engineering • اللائحة المعتمدة</p>
+        </div>
+      </div>
+
+      <!-- الإجراءات السريعة -->
+      <div class="flex items-center gap-2.5">
+        <a href="تصفح المحاضرات.html" class="px-4 py-2 rounded-full ios-btn text-slate-200 hover:text-white text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+          <span class="hidden sm:inline">الصفحة السابقة</span>
+        </a>
+
+          
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full">
+
+    <!-- HERO HEADER: PREP BANNER -->
+    <section class="ios-glass rounded-[36px] p-6 lg:p-10 border border-white/20 relative overflow-hidden shadow-2xl">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-8 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/20 text-amber-300 text-xs font-bold">
+            <i class="fa-solid fa-compass-drafting text-amber-400"></i>
+            بوابة السنة التأسيسية لمهندسي المستقبل • 📐 PREP
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+            مقررات إعدادي هندسة <br>
+            <span class="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent">
+              مقسمة حسب الفصل الدراسي (ترم أول وترم ثاني)
+            </span>
+          </h2>
+          <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl leading-relaxed">
+            تصفح مقررات الفرقة الإعدادية الرسمية المعتمدة وفقاً للائحة الجديدة، مع إمكانية البحث الفوري عن المادة والوصول المباشر للمحاضرات، الشيتات، والسكاشن المرفوعة من المشرف.
+          </p>
+        </div>
+
+        <!-- إحصائيات سريعة للفرقة الإعدادية -->
+        <div class="lg:col-span-4 grid grid-cols-2 gap-3">
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-book-open text-amber-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-white">13</h4>
+            <p class="text-[10px] text-slate-400">مقرر دراسي معتمد</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-calendar-days text-yellow-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-white">فصلين</h4>
+            <p class="text-[10px] text-slate-400">7 ترم أول + 6 ترم ثاني</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-flask-vial text-cyan-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-cyan-300">معامل وورش</h4>
+            <p class="text-[10px] text-slate-400">تطبيق عملي معتمد</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl text-center">
+            <i class="fa-solid fa-bolt text-emerald-400 text-lg mb-1"></i>
+            <h4 class="text-xl font-extrabold text-emerald-400">2026</h4>
+            <p class="text-[10px] text-slate-400">أحدث خطة دراسية</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= شريط البحث اللحظي ================= -->
+    <div class="ios-glass rounded-[26px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/20">
+      <div>
+        <h3 class="text-xl font-black text-white flex items-center gap-2">
+          <i class="fa-solid fa-shapes text-amber-400"></i> المقررات الدراسية لإعدادي هندسة
+        </h3>
+        <p class="text-xs text-slate-400 mt-0.5">اختر المادة لتحميل الشيتات والملخصات والمحاضرات</p>
+      </div>
+
+      <!-- خانة البحث -->
+      <div class="relative w-full md:w-80">
+        <i class="fa-solid fa-magnifying-glass absolute right-4 top-3 text-slate-400 text-xs"></i>
+        <input 
+          id="prep-search-input" 
+          type="text" 
+          placeholder="ابحث عن مادة أو كود (مثال: استاتيكا أو BAS011)..." 
+          class="w-full bg-white/[0.07] border border-white/15 rounded-full pr-10 pl-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400/50"
+        >
+      </div>
+    </div>
+
+    <!-- ================= الحاويتان (ترم أول وترم ثاني) ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- 1. العمود الأول: الفصل الدراسي الأول -->
+      <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-amber-400/30 bg-gradient-to-b from-amber-500/[0.08] to-transparent shadow-xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 font-bold text-sm shadow">
+              1
+            </div>
+            <div>
+              <h4 class="text-base font-black text-white">الفصل الدراسي الأول</h4>
+              <p class="text-[11px] text-slate-400">مواد الترم الأول الرسمية</p>
+            </div>
+          </div>
+          <span id="count-term1" class="text-[10px] font-bold bg-white/10 text-amber-300 px-3 py-1 rounded-full border border-white/15">7 مقررات</span>
+        </div>
+
+        <!-- قائمة مواد الترم الأول -->
+        <div id="term1-container" class="space-y-3">
+          <!-- تتولد المواد ديناميكياً -->
+        </div>
+      </div>
+
+      <!-- 2. العمود الثاني: الفصل الدراسي الثاني -->
+      <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-yellow-500/30 bg-gradient-to-b from-yellow-500/[0.08] to-transparent shadow-xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-yellow-500/20 border border-yellow-400/30 flex items-center justify-center text-yellow-300 font-bold text-sm shadow">
+              2
+            </div>
+            <div>
+              <h4 class="text-base font-black text-white">الفصل الدراسي الثاني</h4>
+              <p class="text-[11px] text-slate-400">مواد الترم الثاني الرسمية</p>
+            </div>
+          </div>
+          <span id="count-term2" class="text-[10px] font-bold bg-white/10 text-yellow-300 px-3 py-1 rounded-full border border-white/15">6 مقررات</span>
+        </div>
+
+        <!-- قائمة مواد الترم الثاني -->
+        <div id="term2-container" class="space-y-3">
+          <!-- تتولد المواد ديناميكياً -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= MODAL: ملفات المادة (المحاضرات والشيتات) ================= -->
+  <div id="subject-files-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="ios-glass max-w-lg w-full rounded-[32px] p-6 sm:p-8 relative border border-amber-400/30 shadow-2xl max-h-[85vh] flex flex-col">
+      
+      <button onclick="toggleModal('subject-files-modal')" class="absolute top-6 left-6 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3.5 mb-5 pb-4 border-b border-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-2xl border border-amber-400/30">
+          <i class="fa-solid fa-folder-open"></i>
+        </div>
+        <div>
+          <h3 id="modal-subject-name" class="text-base font-bold text-white">اسم المقرر</h3>
+          <p id="modal-subject-code" class="text-xs text-amber-300 font-mono font-bold">CODE101</p>
+        </div>
+      </div>
+
+      <!-- قائمة الملفات المرفوعة -->
+      <div id="modal-files-list" class="space-y-3 overflow-y-auto pr-1 flex-1">
+        <!-- تتولد ملفات المادة المرفوعة من الأدمن هنا ديناميكياً -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i class="fa-solid fa-shapes text-amber-400 text-base"></i>
+      <span class="font-bold text-white">الفرقة الإعدادية • إعدادي هندسة</span>
+    </div>
+    <p class="text-[11px] text-slate-500">كلية الهندسة • جامعة قنا</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    const STORAGE_KEY = 'ENGINEER_HUB_PDFS_2026';
+
+    // ================= الخطة الدراسية المعتمدة والمطابقة لصفحة الأدمن =================
+    const prepCurriculum = {
+      // 1. الفصل الدراسي الأول (7 مقررات)
+      term1: [
+        { code: 'UNR016', name: 'تاريخ هندسي', icon: 'fa-landmark' },
+        { code: 'BAS011', name: 'رياضيات (1) - جبر وتفاضل', icon: 'fa-calculator' },
+        { code: 'BAS012', name: 'فيزياء هندسية (1) - خواص مادة وحرارة', icon: 'fa-atom' },
+        { code: 'UNR017', name: 'اختياري مقرر - مصطلحات هندسية', icon: 'fa-book-bookmark' },
+        { code: 'MCE014', name: 'استاتيكا هندسية', icon: 'fa-weight-hanging' },
+        { code: 'MCE013', name: 'رسم هندسي (1)', icon: 'fa-compass-drafting' },
+        { code: 'ELE015', name: 'تكنولوجيا الحاسبات', icon: 'fa-laptop-code' }
+      ],
+
+      // 2. الفصل الدراسي الثاني (6 مقررات)
+      term2: [
+        { code: 'BAS021', name: 'رياضيات (2) - تكامل وهندسة تحليلية', icon: 'fa-square-root-variable' },
+        { code: 'BAS022', name: 'فيزياء هندسية (2) - كهرومغناطيسية وضوء', icon: 'fa-bolt' },
+        { code: 'MCE024', name: 'ديناميكا هندسية', icon: 'fa-gauge-high' },
+        { code: 'MCE023', name: 'رسم هندسي وإسقاط (2)', icon: 'fa-pen-ruler' },
+        { code: 'MCE025', name: 'تكنولوجيا الإنتاج والورش', icon: 'fa-industry' },
+        { code: 'BAS026', name: 'كيمياء هندسية', icon: 'fa-flask' }
+      ]
+    };
+
+    // رسم مواد الترم الأول والثاني وتفعيل الفلترة والبحث
+    function renderPrepSubjects() {
+      const q = (document.getElementById('prep-search-input').value || '').toLowerCase().trim();
+
+      const t1Container = document.getElementById('term1-container');
+      const t2Container = document.getElementById('term2-container');
+
+      let list1 = prepCurriculum.term1;
+      let list2 = prepCurriculum.term2;
+
+      if (q !== '') {
+        list1 = list1.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+        list2 = list2.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+      }
+
+      document.getElementById('count-term1').innerText = `${list1.length} مقررات`;
+      document.getElementById('count-term2').innerText = `${list2.length} مقررات`;
+
+      // تعبئة الترم الأول
+      if (list1.length === 0) {
+        t1Container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">لا توجد مقررات مطابقة للبحث في الترم الأول.</p>`;
+      } else {
+        t1Container.innerHTML = list1.map(item => createCardHtml(item, 'term1')).join('');
+      }
+
+      // تعبئة الترم الثاني
+      if (list2.length === 0) {
+        t2Container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">لا توجد مقررات مطابقة للبحث في الترم الثاني.</p>`;
+      } else {
+        t2Container.innerHTML = list2.map(item => createCardHtml(item, 'term2')).join('');
+      }
+    }
+
+    // تصميم كارت المقرر الدراسي متناسق بالكامل مع ثيم إعدادي هندسة
+    function createCardHtml(item, term) {
+      const isTerm1 = term === 'term1';
+      const badgeClass = isTerm1 ? 'bg-amber-500/15 text-amber-300 border-amber-400/20' : 'bg-yellow-500/15 text-yellow-300 border-yellow-400/20';
+      const iconColor = isTerm1 ? 'text-amber-300' : 'text-yellow-300';
+
+      return `
+        <div class="ios-glass-card p-4 rounded-2xl flex items-center justify-between group transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center ${iconColor} text-base shadow-sm">
+              <i class="fa-solid ${item.icon}"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border ${badgeClass}">${item.code}</span>
+              </div>
+              <h5 class="text-xs sm:text-sm font-bold text-white mt-1 group-hover:text-amber-300 transition">${item.name}</h5>
+            </div>
+          </div>
+          
+          <button onclick="downloadSubjectFiles('${item.name}', '${item.code}')" class="px-3.5 py-2 rounded-xl ios-btn text-xs font-bold text-slate-200 hover:text-white flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-cloud-arrow-down text-xs ${iconColor}"></i>
+            <span>تحميل</span>
+          </button>
+        </div>
+      `;
+    }
+
+    // فتح ملفات المادة وعرض ما رفعه المشرف من لوحة الأدمن
+    function downloadSubjectFiles(name, code) {
+      document.getElementById('modal-subject-name').textContent = name;
+      document.getElementById('modal-subject-code').textContent = code;
+
+      const allPdfs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      
+      // مطابقة ملفات إعدادي هندسة عبر الكود واسم المادة
+      const subjectFiles = allPdfs.filter(file => {
+        const matchDept = !file.dept || file.dept.includes('إعدادي') || file.dept.includes('تمهيدي') || file.dept.includes('عام');
+        const matchCode = file.code && file.code.toUpperCase() === code.toUpperCase();
+        const matchName = file.subject && (file.subject.includes(name) || file.subject.includes(code));
+        return matchDept && (matchCode || matchName);
+      });
+
+      const listContainer = document.getElementById('modal-files-list');
+      listContainer.innerHTML = '';
+
+      if (subjectFiles.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-10 space-y-2.5">
+            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-400 text-2xl">
+              <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-300">لا توجد محاضرات أو شيتات مرفوعة لهذه المادة حتى الآن.</p>
+            <p class="text-[10px] text-slate-500">سيتم إضافة المحتوى قريباً من قبل المشرف الأكاديمي.</p>
+          </div>
+        `;
+      } else {
+        subjectFiles.forEach(file => {
+          const typeColor = file.type === 'محاضرة' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' :
+                            file.type === 'سكشن' ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' :
+                            file.type === 'ملخص' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                            'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+          const item = document.createElement('div');
+          item.className = 'ios-glass-card p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10 hover:border-amber-400/40 transition';
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-lg border border-amber-400/30">
+                <i class="fa-solid fa-file-pdf"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-white">${file.fileTitle}</h5>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border ${typeColor}">${file.type}</span>
+                  <span class="text-[10px] text-slate-400">${file.date}</span>
+                </div>
+              </div>
+            </div>
+            <a href="${file.link}" target="_blank" download="${file.fileTitle}.pdf" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition">
+              <i class="fa-solid fa-download"></i>
+              <span>تحميل</span>
+            </a>
+          `;
+          listContainer.appendChild(item);
+        });
+      }
+
+      toggleModal('subject-files-modal');
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'ios-glass px-4 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2.5 shadow-2xl border border-amber-400/30 transition-all duration-300';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-amber-400"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // ربط محرك البحث اللحظي والتشغيل عند التحميل
+    document.getElementById('prep-search-input').addEventListener('input', renderPrepSubjects);
+    window.onload = renderPrepSubjects;
+  </script>
+</body>
+</html>
