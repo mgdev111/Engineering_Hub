@@ -174,9 +174,45 @@
       </div>
     </div>
   </header>
+  
 
   <!-- ================= MAIN CONTENT ================= -->
   <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full my-auto">
+
+    <!-- ================= DEVELOPER CREDIT BADGES (TOP) ================= -->
+    <div class="space-y-3 w-full">
+      <div class="flex justify-center w-full" dir="ltr">
+        <div class="ios-glass px-5 py-2.5 rounded-full border border-blue-500/25 shadow-xl shadow-black/40 flex flex-wrap items-center justify-center gap-2 sm:gap-3 backdrop-blur-xl">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-code text-blue-500 text-xs"></i>
+            <span class="text-xs text-slate-400 font-semibold">Designed &amp; Developed by</span>
+            <span class="font-black text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-blue-400 bg-clip-text text-transparent">
+              Marwan Gaber
+            </span>
+          </div>
+          <span class="hidden sm:inline text-white/20">•</span>
+          <span class="text-[11px] text-slate-300 font-medium tracking-normal">
+            Second-year Computer Science student at Qena University. &amp; Full-Stack Developer
+          </span>
+        </div>
+      </div>
+
+      <div class="flex justify-center w-full" dir="ltr">
+        <div class="ios-glass px-5 py-2.5 rounded-full border border-blue-500/25 shadow-xl shadow-black/40 flex flex-wrap items-center justify-center gap-2 sm:gap-3 backdrop-blur-xl">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-code text-blue-500 text-xs"></i>
+            <span class="text-xs text-slate-400 font-semibold"> طالب في الفرقة الثانية حاسبات ومعلومات بجامعة قنا. &amp; مطور تطبيقات متكاملة</span>
+            <span class="hidden sm:inline text-white/20">•</span>
+            <span class="font-black text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-blue-400 bg-clip-text text-transparent">
+              مروان جابر
+            </span>
+          </div>
+          <span class="text-[11px] text-slate-300 font-medium tracking-normal">
+            مصمم &amp; تم تطويره بواسطة
+          </span>
+        </div>
+      </div>
+    </div>
 
     <!-- بنر الترحيب الرئيسي -->
     <section class="ios-glass rounded-[36px] p-8 sm:p-12 border border-white/20 relative overflow-hidden shadow-2xl text-center space-y-4">
@@ -197,68 +233,55 @@
       </p>
     </section>
 
-    <!-- كروت الخدمات الرئيسية (روابط لملفات مشروعك على GitHub) -->
+    <!-- كروت الخدمات الرئيسية (3 كروت متجاورة) -->
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       
       <!-- 1. كارت تصفح المحاضرات والمسارات -->
-      <a href="تصفح المحاضرات.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 block group relative overflow-hidden">
-        <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-2xl border border-cyan-400/30 mb-4 group-hover:scale-110 transition duration-300">
-          <i class="fa-solid fa-book-open-reader"></i>
+      <a href="تصفح المحاضرات.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-2xl border border-cyan-400/30 mb-4 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-book-open-reader"></i>
+          </div>
+          <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-cyan-300 transition">تصفح المحاضرات</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            الوصول المباشر للشيتات والمحاضرات والمذكرات المرفوعة من المشرف الأكاديمي.
+          </p>
         </div>
-        <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-cyan-300 transition">تصفح المحاضرات</h3>
-        <p class="text-xs text-slate-400 leading-relaxed mb-4">
-          الوصول المباشر للشيتات والمحاضرات والمذكرات المرفوعة من المشرف الأكاديمي.
-        </p>
-        <span class="text-xs text-cyan-300 font-bold flex items-center gap-1">
+        <span class="text-xs text-cyan-300 font-bold flex items-center gap-1 mt-auto">
           فتح مكتبة المحاضرات <i class="fa-solid fa-arrow-left text-[10px]"></i>
         </span>
-      </a>
+      </a> 
 
-      <!-- 2. كارت إعدادي هندسة -->
-      <a href="اعدادي هندسة.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 block group relative overflow-hidden">
-        <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-2xl border border-amber-400/30 mb-4 group-hover:scale-110 transition duration-300">
-          <i class="fa-solid fa-shapes"></i>
-        </div>
-        <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-amber-300 transition">إعدادي هندسة</h3>
-        <p class="text-xs text-slate-400 leading-relaxed mb-4">
-          الخطة التأسيسية المعتمدة (13 مقرراً مقسمة إلى ترم أول وترم ثاني).
-        </p>
-        <span class="text-xs text-amber-300 font-bold flex items-center gap-1">
-          دخول الفرقة الإعدادية <i class="fa-solid fa-arrow-left text-[10px]"></i>
-        </span>
-      </a>
-
-      <!-- 3. كارت الأقسام الهندسية التخصصية -->
-      <a href="الاقسام الهندسية.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 block group relative overflow-hidden">
-        <div class="w-14 h-14 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-2xl border border-purple-400/30 mb-4 group-hover:scale-110 transition duration-300">
-          <i class="fa-solid fa-layer-group"></i>
-        </div>
-        <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-purple-300 transition">الأقسام الهندسية</h3>
-        <p class="text-xs text-slate-400 leading-relaxed mb-4">
-          الأقسام الأربعة: المدنية، الاتصالات، القوى الميكانيكية، والهندسة الكهربية.
-        </p>
-        <span class="text-xs text-purple-300 font-bold flex items-center gap-1">
-          استعراض الأقسام التخصصية <i class="fa-solid fa-arrow-left text-[10px]"></i>
-        </span>
-      </a>
-
-      <!-- 4. كارت حساب المعدل التراكمي (GPA) -->
-      <a href="GPA.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 block group relative overflow-hidden md:col-span-2 lg:col-span-3">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="flex items-center gap-4 text-center sm:text-right">
-            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-2xl border border-emerald-400/30 shrink-0">
-              <i class="fa-solid fa-calculator"></i>
-            </div>
-            <div>
-              <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-emerald-300 transition">حاسبة المعدل التراكمي (GPA)</h3>
-              <p class="text-xs text-slate-400">احسب تقديرك ونقاطك الفردية والتراكمية وفقاً لنظام الساعات المعتمدة للائحة 2026.</p>
-            </div>
+      <!-- 2. كارت بنك الأسئلة (في المنتصف) -->
+      <a href="بنك الاسئلة.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-2xl border border-indigo-400/30 mb-4 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-folder-open"></i>
           </div>
-          <span class="px-5 py-2.5 rounded-full ios-btn text-xs font-bold text-emerald-300 shrink-0 flex items-center gap-2">
-            <span>ابدأ الحساب الآن</span>
-            <i class="fa-solid fa-arrow-left"></i>
-          </span>
+          <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-indigo-300 transition">بنك الأسئلة</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            نماذج الامتحانات السابقة، أسئلة الميدتيرم، والتدريبات الشاملة لجميع المواد.
+          </p>
         </div>
+        <span class="text-xs text-indigo-300 font-bold flex items-center gap-1 mt-auto">
+          تصفح بنك الأسئلة <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        </span>
+      </a>
+
+      <!-- 3. كارت حساب المعدل التراكمي (GPA) -->
+      <a href="GPA.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-2xl border border-emerald-400/30 mb-4 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h3 class="text-xl font-extrabold text-white mb-1 group-hover:text-emerald-300 transition">حاسبة المعدل التراكمي (GPA)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            احسب تقديرك ونقاطك الفردية والتراكمية وفقاً لنظام الساعات المعتمدة للائحة 2026.
+          </p>
+        </div>
+        <span class="text-xs text-emerald-300 font-bold flex items-center gap-1 mt-auto">
+          ابدأ الحساب الآن <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        </span>
       </a>
 
     </section>

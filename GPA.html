@@ -133,9 +133,6 @@
           <i class="fa-solid fa-arrow-right text-xs"></i>
           <span class="hidden sm:inline">الصفحة الرئيسية</span>
         </a>
-
-          
-        </button>
       </div>
     </div>
   </header>
@@ -149,7 +146,7 @@
         
         <div class="lg:col-span-8 space-y-4">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-bold shadow-inner">
-            <i class="fa-solid fa-wand-magic-sparkles text-cyan-300"></i> نظام الساعات المعتمدة (نظام الـ 4.0)
+            <i class="fa-solid fa-wand-magic-sparkles text-cyan-300"></i> نظام الساعات المعتمدة الشامل (+ / -)
           </div>
           <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
             احسب معدلك الفصلي والتراكمي <br>
@@ -158,7 +155,7 @@
             </span>
           </h2>
           <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl leading-relaxed">
-            أدخل ساعات كل مادة وتقديرها المتوقع، ويمكنك دمج الساعات السابقة والمعدل السابق لحساب المعدل التراكمي الإجمالي CGPA.
+            يدعم سلم التقديرات الكامل بتقديرات البلس والماينس (A-, B-, C-, D-). أدخل ساعات كل مادة وتقديرك، ويمكنك دمج الساعات السابقة والمعدل السابق لحساب المعدل التراكمي الإجمالي CGPA.
           </p>
         </div>
 
@@ -203,7 +200,7 @@
             <h3 class="text-lg font-black text-white flex items-center gap-2">
               <i class="fa-solid fa-list-check text-cyan-400"></i> قائمة مواد الفصل الحالي
             </h3>
-            <p class="text-xs text-slate-400 mt-0.5">أدخل ساعات كل مادة وتقديرك فيها</p>
+            <p class="text-xs text-slate-400 mt-0.5">أدخل ساعات كل مادة وتقديرك فيها (يدعم درجات - و +)</p>
           </div>
 
           <div class="flex items-center gap-2">
@@ -256,15 +253,15 @@
       <!-- القسم الأيمن: سلم التقديرات واللوائح -->
       <div class="lg:col-span-4 space-y-6">
         
-        <!-- كارت سلم التقديرات -->
+        <!-- كارت سلم التقديرات الشامل -->
         <div class="ios-glass rounded-[32px] p-6 space-y-4 border border-white/20 shadow-xl">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-base">
               <i class="fa-solid fa-scale-balanced"></i>
             </div>
             <div>
-              <h4 class="text-sm font-black text-white">سلم التقديرات المعتمد</h4>
-              <p class="text-[10px] text-slate-400">النقاط المقابلة لكل رمز</p>
+              <h4 class="text-sm font-black text-white">سلم التقديرات المعتمد باللائحة</h4>
+              <p class="text-[10px] text-slate-400">نظام النقاط الشامل (+ / -)</p>
             </div>
           </div>
 
@@ -279,24 +276,64 @@
               </thead>
               <tbody class="divide-y divide-white/[0.06] text-slate-300 text-[11px]">
                 <tr>
-                  <td class="py-2 px-3 font-bold text-emerald-400">A+ / A</td>
-                  <td class="py-2 px-3 font-mono font-bold text-white">4.00 - 3.70</td>
-                  <td class="py-2 px-3">ممتاز مرتفع / ممتاز</td>
+                  <td class="py-2 px-3 font-bold text-emerald-400">A+</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">4.00</td>
+                  <td class="py-2 px-3">ممتاز مرتفع</td>
                 </tr>
                 <tr>
-                  <td class="py-2 px-3 font-bold text-cyan-400">B+ / B</td>
-                  <td class="py-2 px-3 font-mono font-bold text-white">3.30 - 3.00</td>
-                  <td class="py-2 px-3">جيد جداً مرتفع / جيد جداً</td>
+                  <td class="py-2 px-3 font-bold text-emerald-400">A</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">4.00</td>
+                  <td class="py-2 px-3">ممتاز</td>
+                </tr>
+                <tr class="bg-emerald-500/[0.05]">
+                  <td class="py-2 px-3 font-bold text-emerald-300">A-</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">3.70</td>
+                  <td class="py-2 px-3">ممتاز منخفض</td>
                 </tr>
                 <tr>
-                  <td class="py-2 px-3 font-bold text-yellow-400">C+ / C</td>
-                  <td class="py-2 px-3 font-mono font-bold text-white">2.70 - 2.30</td>
-                  <td class="py-2 px-3">جيد مرتفع / جيد</td>
+                  <td class="py-2 px-3 font-bold text-cyan-400">B+</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">3.30</td>
+                  <td class="py-2 px-3">جيد جداً مرتفع</td>
                 </tr>
                 <tr>
-                  <td class="py-2 px-3 font-bold text-amber-400">D+ / D</td>
-                  <td class="py-2 px-3 font-mono font-bold text-white">1.70 - 1.00</td>
-                  <td class="py-2 px-3">مقبول مرتفع / مقبول</td>
+                  <td class="py-2 px-3 font-bold text-cyan-400">B</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">3.00</td>
+                  <td class="py-2 px-3">جيد جداً</td>
+                </tr>
+                <tr class="bg-cyan-500/[0.05]">
+                  <td class="py-2 px-3 font-bold text-cyan-300">B-</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">2.70</td>
+                  <td class="py-2 px-3">جيد جداً منخفض</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-yellow-400">C+</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">2.30</td>
+                  <td class="py-2 px-3">جيد مرتفع</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-yellow-400">C</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">2.00</td>
+                  <td class="py-2 px-3">جيد</td>
+                </tr>
+                <tr class="bg-yellow-500/[0.05]">
+                  <td class="py-2 px-3 font-bold text-yellow-300">C-</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">1.70</td>
+                  <td class="py-2 px-3">جيد منخفض</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-amber-400">D+</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">1.30</td>
+                  <td class="py-2 px-3">مقبول مرتفع</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-amber-400">D</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">1.00</td>
+                  <td class="py-2 px-3">مقبول</td>
+                </tr>
+                <tr class="bg-amber-500/[0.05]">
+                  <td class="py-2 px-3 font-bold text-amber-300">D-</td>
+                  <td class="py-2 px-3 font-mono font-bold text-white">0.70</td>
+                  <td class="py-2 px-3">مقبول منخفض</td>
                 </tr>
                 <tr>
                   <td class="py-2 px-3 font-bold text-rose-400">F</td>
@@ -315,7 +352,7 @@
             <span>نصيحة هندسية</span>
           </div>
           <p class="text-[11px] text-slate-300/80 leading-relaxed">
-            المواد ذات الـ 3 أو 4 ساعات معتمدة لها الوزن الأكبر في التأثير على الـ GPA، ركّز على تحقيق تقديرات مرتفعة بها لرفع المعدل بسرعة.
+            المواد ذات الـ 3 أو 4 ساعات معتمدة لها الوزن الأكبر في التأثير على الـ GPA، والفرق بين B و B- أو A و A- يُحدث فارقاً ملموساً في المجموع التراكمي.
           </p>
         </div>
 
@@ -362,31 +399,35 @@
       <i class="fa-solid fa-atom text-cyan-400 text-base"></i>
       <span class="font-bold text-white">كلية الهندسة • جامعة قنا</span>
     </div>
-    <p class="text-[11px] text-slate-500">منظومة الحساب الأكاديمي الموحدة</p>
+    <p class="text-[11px] text-slate-500">منظومة الحساب الأكاديمي الموحدة للساعات المعتمدة</p>
   </footer>
 
   <!-- ================= JAVASCRIPT ================= -->
   <script>
-    // سلم النقاط المعتمد
+    // سلم النقاط المعتمد بلائحة الساعات المعتمدة (شامل درجات الماينس والبلس)
     const gradePoints = {
       'A+': 4.00,
-      'A': 3.70,
+      'A':  4.00,
+      'A-': 3.70,
       'B+': 3.30,
-      'B': 3.00,
-      'C+': 2.70,
-      'C': 2.30,
-      'D+': 1.70,
-      'D': 1.00,
-      'F': 0.00
+      'B':  3.00,
+      'B-': 2.70,
+      'C+': 2.30,
+      'C':  2.00,
+      'C-': 1.70,
+      'D+': 1.30,
+      'D':  1.00,
+      'D-': 0.70,
+      'F':  0.00
     };
 
-    // المواد الافتراضية عند الفتح
+    // المواد الافتراضية عند فتح الصفحة
     const defaultSubjects = [
       { name: '', hours: 3, grade: 'A+' },
-      { name: '', hours: 3, grade: 'A' },
+      { name: '', hours: 3, grade: 'A-' },
       { name: '', hours: 3, grade: 'B+' },
-      { name: '', hours: 2, grade: 'A' },
-      { name: '', hours: 2, grade: 'A+' }
+      { name: '', hours: 2, grade: 'B' },
+      { name: '', hours: 2, grade: 'B-' }
     ];
 
     function renderInitialSubjects() {
@@ -498,11 +539,11 @@
       const badge = document.getElementById('gpa-standing-badge');
       if (gpa >= 3.7) {
         badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30';
-        badge.innerText = '🌟 ممتاز مرتفع (Excellent With Honor)';
+        badge.innerText = '🌟 ممتاز (Excellent)';
       } else if (gpa >= 3.0) {
         badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30';
         badge.innerText = '✨ جيد جداً (Very Good)';
-      } else if (gpa >= 2.3) {
+      } else if (gpa >= 2.0) {
         badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-400/30';
         badge.innerText = '👍 جيد (Good)';
       } else if (gpa >= 1.0) {

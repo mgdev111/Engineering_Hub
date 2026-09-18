@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنك الأسئلة | Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- ================= 🔒 كود حارس الدخول (AUTH GUARD) ================= -->
+  <style id="auth-hide-style">
+    body { display: none !important; }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoMh9_Cd72KU8ApjjMe2GSvPtH8CgkuOY",
+      authDomain: "engineering-hub-aa378.firebaseapp.com",
+      projectId: "engineering-hub-aa378",
+      storageBucket: "engineering-hub-aa378.firebasestorage.app",
+      messagingSenderId: "837394827967",
+      appId: "1:837394827967:web:bdf9490a1cc74fdc90140a",
+      measurementId: "G-F7K6JLN3EF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user || !user.emailVerified) {
+        window.location.replace("login.html");
+      } else {
+        const hideStyle = document.getElementById("auth-hide-style");
+        if (hideStyle) hideStyle.remove();
+        document.body.style.display = "flex";
+
+        const welcomeText = document.getElementById("user-name-display");
+        if (welcomeText) {
+          welcomeText.textContent = user.displayName || user.email.split('@')[0];
+        }
+      }
+    });
+
+    window.logoutUser = async function() {
+      if (confirm("هل تريد تسجيل الخروج من المنظومة؟")) {
+        await signOut(auth);
+        window.location.replace("login.html");
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.22) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.16) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <!-- خلفية الألوان الانسيابية -->
+  <div class="ios-mesh-bg"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-20 py-3 flex items-center justify-between">
+      
+      <!-- شعار المنظومة -->
+      <a href="index.html" class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-blue-600/30 border border-cyan-400/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md">
+          <i class="fa-solid fa-graduation-cap text-xl text-cyan-300"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+              Engineer Hub
+            </span>
+            <span class="text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-bold">2026</span>
+          </div>
+          <p class="text-[11px] text-slate-400">بوابة كلية الهندسة • جامعة قنا</p>
+        </div>
+      </a>
+
+      <!-- معلومات المستخدم المسجل وأزرار التحكم -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="px-4 py-2 rounded-full ios-btn text-cyan-300 hover:text-white text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-house"></i>
+          <span class="hidden sm:inline">الرئيسية</span>
+        </a>
+
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-300">مرحباً، <strong id="user-name-display" class="text-cyan-300">طالب</strong></span>
+        </div>
+
+        <button onclick="logoutUser()" class="px-4 py-2 rounded-full ios-btn text-rose-300 hover:text-white hover:bg-rose-500/20 text-xs font-bold flex items-center gap-2 transition">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span class="hidden sm:inline">تسجيل الخروج</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="relative z-10 max-w-5xl mx-auto px-4 py-8 space-y-8 w-full my-auto">
+
+    <!-- بنر العنوان الرئيسي -->
+    <section class="ios-glass rounded-[32px] p-6 sm:p-10 border border-white/20 relative overflow-hidden shadow-2xl text-center space-y-3">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/25 text-indigo-300 text-xs font-bold">
+        <i class="fa-solid fa-folder-open text-indigo-400"></i>
+        بنك الأسئلة والاختبارات
+      </div>
+      
+      <h1 class="text-2xl sm:text-4xl font-black text-white">
+        اختر المرحلة الدراسية
+      </h1>
+      
+      <p class="text-slate-300/80 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+        تصفح بنوك الأسئلة، الكويزات، والامتحانات السابقة مقسمة حسب الفرق الدراسية والأقسام التخصصية.
+      </p>
+    </section>
+
+    <!-- أقسام بنك الأسئلة (إعدادي هندسة & الأقسام الهندسية كروابط href) -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- 1. رابط كارت إعدادي هندسة -->
+      <a href="بنك اسئلة اعدادي هندسة.html" id="card-preparatory" class="ios-glass-card rounded-[32px] p-8 border border-white/15 block group flex flex-col justify-between">
+        <div>
+          <div class="w-16 h-16 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-3xl border border-cyan-400/30 mb-6 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-compass-drafting"></i>
+          </div>
+          <h2 class="text-2xl font-black text-white mb-2 group-hover:text-cyan-300 transition">
+            إعدادي هندسة
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            الفرقة الإعدادية • يشمل بنوك أسئلة وامتحانات المقررات الأساسية (رياضيات، فيزياء، كيمياء، رسم هندسي، وميكانيكا).
+          </p>
+        </div>
+
+        <div class="pt-8">
+          <span class="text-xs text-cyan-300 font-bold flex items-center gap-1">
+            دخول بنك أسئلة إعدادي <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          </span>
+        </div>
+      </a>
+
+      <!-- 2. رابط كارت الأقسام الهندسية -->
+      <a href="بنك اسئلة الاقسام الهندسية.html" id="card-departments" class="ios-glass-card rounded-[32px] p-8 border border-white/15 block group flex flex-col justify-between">
+        <div>
+          <div class="w-16 h-16 rounded-2xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-3xl border border-indigo-400/30 mb-6 group-hover:scale-110 transition duration-300">
+            <i class="fa-solid fa-sitemap"></i>
+          </div>
+          <h2 class="text-2xl font-black text-white mb-2 group-hover:text-indigo-300 transition">
+            الأقسام الهندسية
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            الأقسام التخصصية • يشمل بنوك الأسئلة والاختبارات للمواد التخصصية لجميع الأقسام الهندسية بالكلية.
+          </p>
+        </div>
+
+        <div class="pt-8">
+          <span class="text-xs text-indigo-300 font-bold flex items-center gap-1">
+            دخول بنك أسئلة الأقسام <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          </span>
+        </div>
+      </a>
+
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i class="fa-solid fa-graduation-cap text-cyan-400 text-base"></i>
+      <span class="font-bold text-white">كلية الهندسة • جامعة قنا</span>
+    </div>
+    <p class="text-[11px] text-slate-500">منظومة Engineer Hub 2026 • جميع الحقوق محفوظة</p>
+  </footer>
+
+</body>
+</html>

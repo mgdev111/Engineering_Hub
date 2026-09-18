@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنك أسئلة هندسة القوى الميكانيكية | MEP Quiz Bank - Engineer Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- ================= 🔒 كود حارس الدخول (AUTH GUARD) ================= -->
+  <style id="auth-hide-style">
+    body { display: none !important; }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoMh9_Cd72KU8ApjjMe2GSvPtH8CgkuOY",
+      authDomain: "engineering-hub-aa378.firebaseapp.com",
+      projectId: "engineering-hub-aa378",
+      storageBucket: "engineering-hub-aa378.firebasestorage.app",
+      messagingSenderId: "837394827967",
+      appId: "1:837394827967:web:bdf9490a1cc74fdc90140a",
+      measurementId: "G-F7K6JLN3EF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user || !user.emailVerified) {
+        window.location.replace("login.html");
+      } else {
+        const hideStyle = document.getElementById("auth-hide-style");
+        if (hideStyle) hideStyle.remove();
+        document.body.style.display = "flex";
+
+        const welcomeText = document.getElementById("user-name-display");
+        if (welcomeText) {
+          welcomeText.textContent = user.displayName || user.email.split('@')[0];
+        }
+      }
+    });
+
+    window.logoutUser = async function() {
+      if (confirm("هل تريد تسجيل الخروج من منظومة هندسة القوى الميكانيكية؟")) {
+        await signOut(auth);
+        window.location.replace("login.html");
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: #050711;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    .ios-mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.22) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(234, 179, 8, 0.18) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(225, 29, 72, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.18) 0px, transparent 50%);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(35px) saturate(190%);
+      -webkit-backdrop-filter: blur(35px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+
+    .ios-glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-glass-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(244, 63, 94, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .ios-btn {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(244, 63, 94, 0.45);
+      transform: scale(1.02);
+    }
+
+    /* ================= أنماط الاختيارات التخصصية لقسم القوى الميكانيكية ================= */
+
+    /* 1. نمط الديناميكا الحرارية والاحتراق والمحطات (Thermal Combustion) */
+    .opt-thermal {
+      background: rgba(43, 17, 24, 0.55);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      border-right: 4px solid #f43f5e;
+    }
+    .opt-thermal:hover {
+      background: rgba(76, 20, 36, 0.75);
+      border-right-color: #fb7185;
+      transform: translateX(-4px);
+    }
+    .opt-thermal.selected {
+      background: rgba(136, 19, 55, 0.85);
+      border-color: #fb7185;
+      border-right: 5px solid #fda4af;
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.4);
+      transform: translateX(-4px);
+    }
+
+    /* 2. نمط ميكانيكا الموائع وسريان الأنابيب (Fluid Dynamics) */
+    .opt-fluid {
+      background: rgba(12, 74, 110, 0.35);
+      border: 1px dashed rgba(56, 189, 248, 0.3);
+    }
+    .opt-fluid:hover {
+      border-color: #38bdf8;
+      background: rgba(3, 105, 161, 0.55);
+    }
+    .opt-fluid.selected {
+      background: rgba(2, 132, 199, 0.75);
+      border: 1.5px solid #7dd3fc;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+    }
+
+    /* 3. نمط انتقال الحرارة والتبريد والتكييف (Heat Transfer & HVAC) */
+    .opt-heat {
+      background: rgba(45, 26, 14, 0.5);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+    .opt-heat:hover {
+      border-color: #f97316;
+      background: rgba(67, 36, 18, 0.7);
+      transform: translateX(-4px);
+    }
+    .opt-heat.selected {
+      background: rgba(154, 52, 18, 0.8);
+      border-color: #fdba74;
+      box-shadow: 0 0 25px rgba(249, 115, 22, 0.4);
+      transform: translateX(-4px);
+    }
+
+    /* 4. نمط الآلات التوربينية والمحركات (Turbomachinery & ICE) */
+    .opt-turbo {
+      background: rgba(41, 37, 36, 0.6);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+    .opt-turbo:hover {
+      border-color: #f59e0b;
+      background: rgba(68, 64, 60, 0.75);
+    }
+    .opt-turbo.selected {
+      background: rgba(120, 53, 15, 0.85);
+      border-color: #fbbf24;
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+    }
+
+    /* 5. نمط التصميم الميكانيكي وتحليل الإجهادات والاهتزازات (Mechanical Design) */
+    .opt-design {
+      background: rgba(30, 27, 75, 0.4);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+    }
+    .opt-design:hover {
+      border-color: #c084fc;
+      background: rgba(49, 46, 129, 0.6);
+    }
+    .opt-design.selected {
+      background: rgba(88, 28, 135, 0.8);
+      border-color: #d8b4fe;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen relative flex flex-col justify-between">
+  <div class="ios-mesh-bg"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="ios-glass rounded-[28px] px-6 h-20 py-3 flex items-center justify-between">
+      
+      <a href="index.html" class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500/30 to-orange-600/40 border border-rose-400/30 flex items-center justify-center text-white shadow-lg backdrop-blur-md">
+          <i class="fa-solid fa-fire-flame-curved text-xl text-rose-300"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-rose-300 bg-clip-text text-transparent">
+              بنك أسئلة القوى الميكانيكية
+            </span>
+            <span class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-400/30 px-2 py-0.5 rounded-full font-bold">MEP • 30Q</span>
+          </div>
+          <p class="text-[11px] text-slate-400">قسم هندسة القوى الميكانيكية • بنك تدريبي مخصص لكل مقرر باللائحة</p>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <button id="back-to-subjects-btn" onclick="backToSubjectsView()" class="hidden px-4 py-2 rounded-full ios-btn text-rose-300 hover:text-white text-xs font-bold items-center gap-2">
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+          <span>قائمة المقررات</span>
+        </button>
+
+        <a href="بنك اسئلة الاقسام الهندسية.html" class="px-4 py-2 rounded-full ios-btn text-slate-300 hover:text-white text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-folder-open text-xs"></i>
+          <span class="hidden sm:inline">مقررات ومذكرات القسم</span>
+        </a>
+
+        <button onclick="logoutUser()" class="px-4 py-2 rounded-full ios-btn text-rose-300 hover:text-white hover:bg-rose-500/20 text-xs font-bold flex items-center gap-2 transition">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span class="hidden sm:inline">خروج</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full my-auto">
+
+    <!-- ================= 1. واجهة اختيار المستوى والمقرر ================= -->
+    <div id="subjects-selection-view" class="space-y-6">
+
+      <!-- البانر الترحيبي -->
+      <section class="ios-glass rounded-[32px] p-6 sm:p-8 text-center space-y-3 border border-rose-400/30">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/15 border border-rose-400/25 text-rose-300 text-xs font-bold">
+          <i class="fa-solid fa-gears text-orange-400"></i>
+          بنك أسئلة واختبارات تخصص هندسة القوى الميكانيكية (30 سؤالاً لكل مقرر)
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white">اختر المستوى الأكاديمي ثم ابدأ الكويز التفاعلي</h1>
+        <p class="text-xs sm:text-sm text-slate-300/80 max-w-2xl mx-auto leading-relaxed">
+          تم تصميم واجهة الحلول لتلائم كل مادة ميكانيكية (ديناميكا حرارية، موائع، انتقال حرارة، احتراق داخلي، آلات توربينية، وتكييف) بدون أنماط مكررة مع خلط عشوائي للإجابات وشرح هندسي دقيق.
+        </p>
+      </section>
+
+      <!-- كروت المستويات الأربعة -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="level-cards-container">
+        
+        <!-- مستوى 100 -->
+        <div onclick="selectLevel('100')" id="lvl-card-100" class="ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-rose-500/20 to-orange-500/10 border-2 border-rose-400/50 shadow-lg shadow-rose-500/10 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-rose-300 font-mono font-black text-sm">100</span>
+            <span class="text-[10px] bg-rose-400/10 text-rose-300 border border-rose-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 100</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-rose-300 transition">مستوى 100</h4>
+          <p class="text-[11px] text-slate-400 mt-1">13 مقرر • ديناميكا حرارية وتحليل إجهادات</p>
+        </div>
+
+        <!-- مستوى 200 -->
+        <div onclick="selectLevel('200')" id="lvl-card-200" class="ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/15 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-orange-300 font-mono font-black text-sm">200</span>
+            <span class="text-[10px] bg-orange-400/10 text-orange-300 border border-orange-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 200</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-orange-300 transition">مستوى 200</h4>
+          <p class="text-[11px] text-slate-400 mt-1">12 مقرر • ميكانيكا موائع وانتقال حرارة وتصميم</p>
+        </div>
+
+        <!-- مستوى 300 -->
+        <div onclick="selectLevel('300')" id="lvl-card-300" class="ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/15 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-cyan-300 font-mono font-black text-sm">300</span>
+            <span class="text-[10px] bg-cyan-400/10 text-cyan-300 border border-cyan-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 300</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-cyan-300 transition">مستوى 300</h4>
+          <p class="text-[11px] text-slate-400 mt-1">13 مقرر • محركات احتراق وآلات توربينية واهتزازات</p>
+        </div>
+
+        <!-- مستوى 400 -->
+        <div onclick="selectLevel('400')" id="lvl-card-400" class="ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/15 group">
+          <div class="flex items-center justify-between mb-3">
+            <span class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-emerald-300 font-mono font-black text-sm">400</span>
+            <span class="text-[10px] bg-emerald-400/10 text-emerald-300 border border-emerald-400/20 px-2 py-0.5 rounded-full font-bold">LEVEL 400</span>
+          </div>
+          <h4 class="font-extrabold text-base text-white group-hover:text-emerald-300 transition">مستوى 400</h4>
+          <p class="text-[11px] text-slate-400 mt-1">13 مقرر • تبريد وتكييف ومحطات طاقة تقليدية ومتجددة</p>
+        </div>
+
+      </div>
+
+      <!-- شريط البحث السريع بالمستوى -->
+      <div class="ios-glass rounded-[24px] p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/10">
+        <div class="text-xs text-slate-300 font-bold flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse"></span>
+          <span id="level-summary-label">مواد مستوى 100 • 13 مقرراً دراسياً (30 سؤال لكل مادة)</span>
+        </div>
+        <div class="relative w-full md:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute right-4 top-3 text-slate-400 text-xs"></i>
+          <input 
+            id="mep-search-input" 
+            type="text" 
+            placeholder="ابحث باسم المادة أو الكود (مثال: موائع أو MPE113)..." 
+            class="w-full bg-white/[0.07] border border-white/15 rounded-full pr-10 pl-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400/50"
+          >
+        </div>
+      </div>
+
+      <!-- شبكة فصلي المستوى المختار -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- الفصل الدراسي الأول -->
+        <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-rose-400/30 bg-gradient-to-b from-rose-500/[0.08] to-transparent">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-400/30 flex items-center justify-center text-rose-300 font-bold text-sm">1</div>
+              <div>
+                <h4 class="text-base font-black text-white">الفصل الدراسي الأول</h4>
+                <p class="text-[11px] text-slate-400">الصف الشمال باللائحة</p>
+              </div>
+            </div>
+            <span id="term1-count" class="text-[10px] font-bold bg-white/10 text-rose-300 px-3 py-1 rounded-full border border-white/15">مواد الترم</span>
+          </div>
+          <div id="term1-subjects-list" class="space-y-3"></div>
+        </div>
+
+        <!-- الفصل الدراسي الثاني -->
+        <div class="ios-glass rounded-[30px] p-6 space-y-4 border border-orange-500/30 bg-gradient-to-b from-orange-600/[0.08] to-transparent">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-400/30 flex items-center justify-center text-orange-300 font-bold text-sm">2</div>
+              <div>
+                <h4 class="text-base font-black text-white">الفصل الدراسي الثاني</h4>
+                <p class="text-[11px] text-slate-400">الصف اليمين باللائحة</p>
+              </div>
+            </div>
+            <span id="term2-count" class="text-[10px] font-bold bg-white/10 text-orange-300 px-3 py-1 rounded-full border border-white/15">مواد الترم</span>
+          </div>
+          <div id="term2-subjects-list" class="space-y-3"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= 2. واجهة حل اختبار الـ 30 سؤال ================= -->
+    <div id="quiz-box-wrapper" class="hidden max-w-4xl mx-auto space-y-6">
+
+      <div id="quiz-container" class="ios-glass rounded-[32px] p-6 sm:p-8 space-y-6 border border-rose-400/25 shadow-2xl relative">
+        
+        <!-- رأس الكويز والتقدم -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-slate-300 pb-2 border-b border-white/10">
+          <span class="flex items-center gap-1.5 text-rose-300">
+            <i class="fa-solid fa-circle-question"></i>
+            <span>السؤال</span>
+            <span id="current-q-num" class="text-white text-base">1</span>
+            <span id="total-q-num">من 30</span>
+          </span>
+          
+          <div class="flex-1 max-w-xs bg-white/10 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10 mx-2">
+            <div id="progress-bar" class="bg-gradient-to-l from-rose-400 to-orange-500 h-full rounded-full transition-all duration-300" style="width: 3.33%;"></div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span id="subject-badge" class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-400/30 text-[11px] text-rose-300 font-bold">
+              المقرر
+            </span>
+          </div>
+        </div>
+
+        <!-- نص السؤال -->
+        <div class="bg-white/5 p-5 sm:p-6 rounded-2xl border border-white/10 shadow-inner">
+          <h2 id="question-text" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+            جاري التحميل...
+          </h2>
+        </div>
+
+        <!-- حاوية الاختيارات التخصصية -->
+        <div id="options-container" class="grid grid-cols-1 gap-3"></div>
+
+        <!-- شريط التحكم والتنقل -->
+        <div class="flex items-center justify-between pt-4 border-t border-white/10">
+          <button id="prev-btn" onclick="prevQuestion()" class="ios-btn px-5 py-2.5 rounded-2xl text-xs font-bold text-slate-300 disabled:opacity-30 disabled:pointer-events-none flex items-center gap-2">
+            <i class="fa-solid fa-arrow-right"></i>
+            السابق
+          </button>
+
+          <div class="hidden sm:flex items-center gap-1">
+            <span class="text-[11px] text-slate-400">انتقال سريع:</span>
+            <select id="quick-jump-select" onchange="jumpToQuestion(this.value)" class="bg-white/10 border border-white/20 rounded-xl px-2 py-1 text-xs text-rose-300 font-bold focus:outline-none">
+            </select>
+          </div>
+
+          <button id="next-btn" onclick="nextQuestion()" class="ios-btn px-6 py-2.5 rounded-2xl text-xs font-bold bg-rose-500/20 text-rose-300 border-rose-400/40 hover:bg-rose-500/40 flex items-center gap-2">
+            <span>التالي</span>
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+
+          <button id="submit-btn" onclick="submitQuiz()" class="hidden px-7 py-2.5 rounded-2xl text-xs font-bold bg-gradient-to-r from-rose-500 to-orange-500 text-slate-950 hover:from-rose-400 hover:to-orange-400 shadow-lg shadow-rose-500/20 items-center gap-2 transition">
+            <i class="fa-solid fa-circle-check"></i>
+            إنهاء وتسليم الاختبار (30 سؤال)
+          </button>
+        </div>
+
+      </div>
+
+      <!-- كارت النتيجة النهائي -->
+      <div id="result-container" class="hidden ios-glass rounded-[32px] p-6 sm:p-10 space-y-8 border border-rose-400/30 shadow-2xl text-center">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-rose-500/30 to-orange-600/30 border border-rose-400/40 flex items-center justify-center text-4xl shadow-xl">
+          <i id="result-icon" class="fa-solid fa-trophy text-rose-300"></i>
+        </div>
+
+        <div class="space-y-2">
+          <span id="result-badge" class="px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 border border-rose-400/30 text-rose-300">
+            التقييم الشامل
+          </span>
+          <h2 id="result-subject-title" class="text-2xl sm:text-3xl font-black text-white">نتيجتك في كويز المقرر</h2>
+          <p class="text-xs text-slate-400">ملخص إجابات الـ 30 سؤالاً والتحليل الهندسي الدقيق</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+          <div class="ios-glass-card p-4 rounded-2xl border border-rose-400/20">
+            <p class="text-[11px] text-slate-400 mb-1">الدرجة</p>
+            <p class="text-2xl font-black text-rose-300"><span id="score-val">0</span> / 30</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl border border-orange-400/20">
+            <p class="text-[11px] text-slate-400 mb-1">النسبة</p>
+            <p id="percent-val" class="text-2xl font-black text-orange-300">0%</p>
+          </div>
+          <div class="ios-glass-card p-4 rounded-2xl border border-white/10">
+            <p class="text-[11px] text-slate-400 mb-1">التقدير</p>
+            <p id="status-val" class="text-base font-bold text-emerald-400 mt-1">امتياز</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 pt-2">
+          <button onclick="restartCurrentQuiz()" class="ios-btn px-6 py-2.5 rounded-2xl text-xs font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right text-rose-400"></i>
+            إعادة هذا الاختبار
+          </button>
+          <button onclick="toggleReview()" class="ios-btn px-6 py-2.5 rounded-2xl text-xs font-bold text-rose-300 flex items-center gap-2">
+            <i class="fa-solid fa-list-check"></i>
+            مراجعة الـ 30 سؤال مع الحلول والشرح
+          </button>
+          <button onclick="backToSubjectsView()" class="ios-btn px-6 py-2.5 rounded-2xl text-xs font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-shapes text-rose-300"></i>
+            اختيار مقرر آخر
+          </button>
+        </div>
+
+        <div id="review-section" class="hidden text-right space-y-4 pt-6 border-t border-white/10">
+          <h3 class="text-lg font-black text-white text-center mb-4 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-book-bookmark text-rose-400"></i>
+            المراجعة الكاملة والحلول النموذجية (30 سؤال)
+          </h3>
+          <div id="review-items" class="space-y-3"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i class="fa-solid fa-fire-flame-curved text-rose-400 text-base"></i>
+      <span class="font-bold text-white">قسم هندسة القوى الميكانيكية • كلية الهندسة جامعة قنا</span>
+    </div>
+    <p class="text-[11px] text-slate-500">منظومة Engineer Hub 2026 • بنك أسئلة مهندسي الطاقة والميكانيكا</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT: محرك بنك أسئلة هندسة القوى الميكانيكية ================= -->
+  <script>
+    // 1. الخطة الدراسية المعتمدة لقسم MEP مع النمط البصري التخصصي
+    const mechCurriculum = {
+      '100': {
+        term1: [
+          { code: 'PDE111', name: 'رسم ميكانيكي (1)', icon: 'fa-compass-drafting', theme: 'design' },
+          { code: 'PDE112', name: 'هندسة الإنتاج والتصنيع المتقدم', icon: 'fa-industry', theme: 'design' },
+          { code: 'MPE113', name: 'مبادئ الديناميكا الحرارية', icon: 'fa-fire-flame-curved', theme: 'thermal' },
+          { code: 'PDE114', name: 'خواص واختبارات المواد', icon: 'fa-shield-halved', theme: 'design' },
+          { code: 'CIE115', name: 'مقرر اختياري (1)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'UNR116', name: 'كتابة تقارير فنية', icon: 'fa-file-lines', theme: 'design' },
+          { code: 'ELE117', name: 'مقرر اختياري (2)', icon: 'fa-book-bookmark', theme: 'design' },
+        ],
+        term2: [
+          { code: 'PDE121', name: 'رسم ميكانيكي وإنشاء ماكينات', icon: 'fa-pen-ruler', theme: 'design' },
+          { code: 'MPE122', name: 'ديناميكا حرارية (1)', icon: 'fa-temperature-high', theme: 'thermal' },
+          { code: 'PDE123', name: 'تحليل الإجهادات', icon: 'fa-weight-hanging', theme: 'design' },
+          { code: 'ENG124', name: 'تحليلات هندسية', icon: 'fa-square-root-variable', theme: 'design' },
+          { code: 'PDE125', name: 'نظرية ماكينات', icon: 'fa-gears', theme: 'turbo' },
+          { code: 'UNR126', name: 'حقوق الإنسان ومكافحة الفساد', icon: 'fa-scale-balanced', theme: 'design' },
+        ]
+      },
+      '200': {
+        term1: [
+          { code: 'PDE211', name: 'أساسيات التصميم الميكانيكي', icon: 'fa-drafting-compass', theme: 'design' },
+          { code: 'ELE212', name: 'مقرر اختياري (3)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'UNR213', name: 'أمن وسلامة مهنية', icon: 'fa-hard-hat', theme: 'design' },
+          { code: 'PDE214', name: 'مقرر اختياري (4)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'MPE215', name: 'مبادئ ميكانيكا الموائع', icon: 'fa-water', theme: 'fluid' },
+          { code: 'MME216', name: 'مبادئ التحكم الآلي', icon: 'fa-sliders', theme: 'design' },
+        ],
+        term2: [
+          { code: 'PDE221', name: 'تصميم أجزاء الماكينات', icon: 'fa-cogs', theme: 'design' },
+          { code: 'MPE222', name: 'ميكانيكا موائع (1)', icon: 'fa-droplet', theme: 'fluid' },
+          { code: 'MPE223', name: 'تحليلات هندسية متقدمة', icon: 'fa-calculator', theme: 'design' },
+          { code: 'MPE224', name: 'مبادئ انتقال حرارة', icon: 'fa-fire', theme: 'heat' },
+          { code: 'MME225', name: 'لغات البرمجة وتطبيقاتها', icon: 'fa-code', theme: 'design' },
+          { code: 'MME226', name: 'قياسات وأجهزة القياس', icon: 'fa-gauge-high', theme: 'thermal' },
+        ]
+      },
+      '300': {
+        term1: [
+          { code: 'MPE311', name: 'مقرر اختياري (5)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'MPE312', name: 'ديناميكا الغازات', icon: 'fa-wind', theme: 'fluid' },
+          { code: 'MPE313', name: 'انتقال الحرارة والكتلة', icon: 'fa-temperature-arrow-up', theme: 'heat' },
+          { code: 'MPE314', name: 'هندسة الآلات الحرارية', icon: 'fa-fan', theme: 'turbo' },
+          { code: 'MPE315', name: 'مقرر اختياري (6)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'UNR316', name: 'القضايا المجتمعية', icon: 'fa-users', theme: 'design' },
+          { code: 'PDE317', name: 'الاهتزازات الميكانيكية', icon: 'fa-wave-square', theme: 'design' },
+        ],
+        term2: [
+          { code: 'MPE321', name: 'حسابات نظم ومواسير', icon: 'fa-network-wired', theme: 'fluid' },
+          { code: 'MPE322', name: 'مقرر اختياري (7)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'MPE323', name: 'محركات الاحتراق الداخلي (1)', icon: 'fa-car-battery', theme: 'turbo' },
+          { code: 'UNR324', name: 'علم نفس واجتماع صناعي', icon: 'fa-brain', theme: 'design' },
+          { code: 'MPE325', name: 'آلات توربينية (1)', icon: 'fa-compact-disc', theme: 'turbo' },
+          { code: 'MPE326', name: 'مقرر اختياري (8)', icon: 'fa-book-bookmark', theme: 'design' },
+        ]
+      },
+      '400': {
+        term1: [
+          { code: 'MPE411', name: 'تبريد', icon: 'fa-snowflake', theme: 'heat' },
+          { code: 'MPE412', name: 'محطات توليد الطاقة التقليدية', icon: 'fa-bolt', theme: 'thermal' },
+          { code: 'MPE413', name: 'مقرر اختياري (9)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'MPE414', name: 'محركات الاحتراق الداخلي (2)', icon: 'fa-car', theme: 'turbo' },
+          { code: 'MPE415', name: 'آلات توربينية (2)', icon: 'fa-fan', theme: 'turbo' },
+          { code: 'MPE416', name: 'مقرر اختياري (10)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'MPE417', name: 'مشروع التخرج (1)', icon: 'fa-graduation-cap', theme: 'thermal' },
+        ],
+        term2: [
+          { code: 'MPE421', name: 'تكييف الهواء', icon: 'fa-temperature-low', theme: 'heat' },
+          { code: 'MPE422', name: 'محطات توليد الطاقة المتجددة', icon: 'fa-solar-panel', theme: 'thermal' },
+          { code: 'MPE423', name: 'معامل هندسة القوى الميكانيكية', icon: 'fa-flask-vial', theme: 'thermal' },
+          { code: 'MPE424', name: 'مقرر اختياري (11)', icon: 'fa-book-bookmark', theme: 'design' },
+          { code: 'UNR425', name: 'ريادة أعمال', icon: 'fa-chart-line', theme: 'design' },
+          { code: 'MPE426', name: 'مشروع التخرج (2)', icon: 'fa-award', theme: 'thermal' },
+        ]
+      }
+    };
+
+    // 2. بنك الأسئلة الأساسي التخصصي لمقررات هندسة القوى الميكانيكية
+    const mepCoreQuestions = {
+      // ديناميكا حرارية ومحطات طاقة واحتراق
+      'thermal': [
+        { q: "وفقاً للقانون الأول للديناميكا الحرارية في نظام مغلق، التغير في الطاقة الداخلية (ΔU) يساوي:", c: "Q - W (صافي كمية الحرارة المضافة مطروحاً منها الشغل المبذول)", w: ["Q + W دائماً", "Q / W", "صفراً في جميع العمليات الدورية وغير الدورية"], exp: "القانون الأول يمثل مبدأ حفظ الطاقة: ΔU = Q - W، حيث Q هي الحرارة الداخلة للنظام و W هو الشغل المنجز بواسطته." },
+        { q: "دورة رانكن البخارية القياسية (Ideal Rankine Cycle) المُستخدمة في محطات توليد القوى تتكون من:", c: "إجراءين بثبوت الإنتروبيا وإجراءين بثبوت الضغط (2 Isentropic + 2 Isobaric)", w: ["إجراءين بثبوت الحجم وإجراءين بثبوت درجة الحرارة", "أربعة إجراءات متساوية الإنثالبي", "إجراءات خنق متتالية بدون تغير طوري"], exp: "دورة رانكن تتضمن انضغاطاً أيزنتروبياً في المضخة، إضافة حرارة بثبوت الضغط بالمرجل، تمدداً أيزنتروبياً في التوربين، وتكثيفاً بثبوت الضغط بالمكثف." },
+        { q: "في الدورة الديناميكية الحرارية العكوسة لكارنو (Carnot Cycle)، الكفاءة الحرارية القصوى تعتمد حصراً على:", c: "درجتي حرارة المصدر الساخن والمشتت البارد المطلقتين: η = 1 - (TL / TH)", w: ["نوع المائع العامل وكتلته الجزيئية فقط", "الضغط الأقصى المتولد داخل الأسطوانة", "معدل تدفق الوقود ونسبة الأكسجين"], exp: "كفاءة كارنو هي الحد الأقصى النظري المستحيل تجاوزه لأي محرك حراري يعمل بين درجتي الحرارة المطلقتين TH و TL." },
+        { q: "معامل جودة البخار أو الكسر الجاف (Dryness Fraction - x) يُعرّف في منطقة البخار الرطب بأنه:", c: "نسبة كتلة بخار الماء الجاف إلى إجمالي كتلة الخليط (بخار + سائل)", w: ["نسبة حجم السائل إلى حجم البخار الكلي", "درجة حرارة البخار مقسومة على درجة حرارة التشبع", "معدل تدفق الكتلة لكل ثانية"], exp: "x = m_vapor / (m_vapor + m_liquid)، ويكون x = 0 عند خط السائل المشبع و x = 1 عند خط البخار المشبع الجاف." }
+      ],
+      // ميكانيكا موائع وديناميكا غازات ونظم مواسير
+      'fluid': [
+        { q: "في السريان الطبقي (Laminar Flow) داخل أنبوب دائري مغلق، رقم رينولدز (Reynolds Number - Re) يكون عادة:", c: "أقل من 2000 (Re < 2000)", w: ["أكبر من 4000", "بين 2300 و 10000", "أكبر من 100000"], exp: "عند Re < 2000 تغلب قوى اللزوجة على قوى القصور الذاتي ويسري المائع في طبقات موازية منتظمة دون دوامات اضطرابية." },
+        { q: "ظاهرة التكهف (Cavitation) في المضخات الطاردة المركزية تحدث نتيجة:", c: "انخفاض الضغط الموضعي عند مدخل الريش لأقل من ضغط بخار السائل المشبع", w: ["ارتفاع درجة حرارة سائل التبريد بصورة مفاجئة", "زيادة لزوجة المائع إلى الحد الحرج", "انسداد صمام عدم الرجوع عند مخرج المضخة"], exp: "عند هبوط الضغط دون ضغط التشبع تتكون فقاعات بخارية تنفجر بعنف عند انتقالها لمناطق الضغط العالي مسببة تآكلاً واهتزازات حادة للريش." },
+        { q: "المعادلة العامة لحساب فاقد الضغط بالاحتكاك (Friction Head Loss) في الأنابيب هي معادلة:", c: "دارسي - فايسباخ: hf = f · (L / D) · (v² / 2g)", w: ["معادلة برنولي للمائع المثالي", "معادلة نافييه ستوكس للتدفق غير اللزج", "معادلة هازن ويليامز للغازات فقط"], exp: "معادلة دارسي-فايسباخ هي الأساس لحساب فواقد الاحتكاك hf في الأنابيب بدلالة معامل الاحتكاك f والسرعة v والقطر D والطول L." },
+        { q: "في ديناميكا الغازات القابلة للانضغاط، عندما يتجاوز رقم ماخ (Mach Number > 1) فإن السريان يوصف بأنه:", c: "سريان فائق لسرعة الصوت (Supersonic Flow)", w: ["سريان دون صوتي (Subsonic)", "سريان صوتي حرج (Sonic)", "سريان عديم الدوامات"], exp: "رقم ماخ هو النسبة بين سرعة المائع وسرعة الصوت في نفس الوسط؛ فإذا كان M > 1 يكون السريان فائقاً لسرعة الصوت." }
+      ],
+      // انتقال حرارة وكتلة وتبريد وتكييف
+      'heat': [
+        { q: "قانون فورييه للتوصيل الحراري (Fourier's Law) ينص على أن معدل انتقال الحرارة q يتناسب طردياً مع:", c: "مساحة المقطع العرضي والتدرج الحراري السالب: q = -k · A · (dT/dx)", w: ["مربع المسافة وعكسياً مع فرق درجات الحرارة", "معامل الانبعاث الإشعاعي ومكعب الحجم", "السعة الحرارية النوعية للغاز فقط"], exp: "ينص قانون فورييه على أن التدفق الحراري بالتوصيل ينحدر من درجات الحرارة المرتفعة إلى المنخفضة عبر المساحة A والموصلية k." },
+        { q: "معامل الأداء (COP) لدورة التبريد الانضغاطية البخارية القياسية يُحسب من النسبة بين:", c: "التأثير التبريدي المستفاد في المبخر (QL) إلى الشغل الصافي المدخل للضاغط (W)", w: ["الحرارة المطرودة بالمكثف إلى الطاقة الكهربية الكلية", "درجة حرارة المكثف إلى ضغط المبخر", "شغل الضاغط مقسوماً على وزن وسيط التبريد"], exp: "معامل الأداء COP = Desired Output / Required Input = QL / W_in، وتتجاوز قيمته عادة الواحد الصحيح في الدورات العملية." },
+        { q: "في المخطط السيكرومتري لتكييف الهواء، عملية التبريد مع إزالة الرطوبة (Cooling and Dehumidification) تمثل:", c: "انخفاض درجة الحرارة الجافة (DBT) وانخفاض نسبة الرطوبة النوعية (Humidity Ratio)", w: ["ثبات درجة الحرارة وارتفاع الإنثالبي", "ارتفاع درجة الحرارة الجافة وانخفاض الرطوبة النسبية", "ثبات نسبة الرطوبة مع التبريد المحسوس فقط"], exp: "تمرر كتلة الهواء على ملف تبريد حرارته أقل من نقطة الندى (Dew Point) فيتكثف جزء من بخار الماء وتنخفض الحرارة والرطوبة النوعية معاً." },
+        { q: "عدد نسلت (Nusselt Number - Nu) في انتقال الحرارة بالحمل الحراري يمثل النسبة بين:", c: "انتقال الحرارة بالحمل إلى انتقال الحرارة بالتوصيل النقي عبر طبقة المائع", w: ["قوى القصور الذاتي إلى قوى اللزوجة", "الانتشارية الحرارية إلى الانتشارية الحركية", "الإشعاع المنبعث إلى إشعاع الجسم الأسود"], exp: "Nu = h·L / k، وهو المقياس اللابعدي الأساسي لتقييم كفاءة انتقال الحرارة بالحمل الحراري مقارنة بالتوصيل." }
+      ],
+      // آلات توربينية ومحركات احتراق داخلي ونظرية ماكينات
+      'turbo': [
+        { q: "في محركات الاحتراق الداخلي رباعية الأشواط، عمود الكرنك (Crankshaft) يكمل لإنهاء دورة حرارية كاملة:", c: "دورتين كاملتين (720 درجة)", w: ["دورة واحدة (360 درجة)", "أربع دورات كاملة (1440 درجة)", "نصف دورة فقط"], exp: "الأشواط الأربعة (سحب، انضغاط، قدرة، عادم) تتطلب شوطين لكل لفة، فيكمل المكبس 4 أشواط خلال لفتين لعمود المرفق." },
+        { q: "معادلة أويلر للآلات التوربينية (Euler Turbomachinery Equation) تعتمد لحساب الشغل النوعي على التغير في:", c: "كمية الحركة الزاوية للمائع بين مدخل ومخرج الريشة: w = u₁·Vu₁ - u₂·Vu₂", w: ["الضغط الإستاتيكي الخالص دون النظر للسرعات", "اللزوجة الحركية وقطر الصمامات", "الوزن النوعي ومعدل البخر"], exp: "معادلة أويلر تحسب العزم والشغل النوعي المنقول بين الريش والمائع بدلالة السرعات المماسية ومثلثات السرعة (Velocity Triangles)." },
+        { q: "ظاهرة الصفع أو القرقعة (Knocking) في محركات البنزين (Spark Ignition) تحدث نتيجة:", c: "الاشتعال الذاتي التلقائي لنهاية الشحنة (End Gas) قبل وصول جبهة اللهب المنتظمة", w: ["تأخر شرارة شمعة الاحتراق عن موعدها", "انخفاض نسبة انضغاط المحرك", "استخدام وقود ذي رقم أوكتان فائق الارتفاع"], exp: "تحدث القرقعة عند اشتعال خليط الوقود والهواء البعيد ذاتياً بسبب الضغط والحرارة العاليين، وتُقاس مقاومة الوقود لها برقم الأوكتان." }
+      ],
+      // تصميم ميكانيكي وتحليل إجهادات واهتزازات
+      'design': [
+        { q: "نظرية فون ميسيس (Von Mises Theory - Distortion Energy Theory) تُستخدم كمعيار لانهيار:", c: "المواد المطيلية (Ductile Materials) المعرضة لإجهادات متعددة المحاور", w: ["المواد القصفة كالزجاج والحديد الزهر (Brittle Materials)", "التربة الطينية الرطبة فقط", "المطاط واللدائن فائقة المرونة"], exp: "تنص نظرية طاقة التشويه لفون ميسيس على أن الخضوع يبدأ عندما تصل طاقة التشويه لوحدة الحجم إلى نفس قيمتها عند نقطة الخضوع في اختبار الشد البسيط." },
+        { q: "التردد الطبيعي غير المخمد (Undamped Natural Frequency - ωn) لنظام كتلة ونبض (Mass-Spring) يُحسب من:", c: "ωn = √(k / m) rad/s", w: ["ωn = k · m", "ωn = √(m / k)", "ωn = (1/2) · k · m²"], exp: "التردد الدائري الطبيعي للنظام المهتز البسيط ذي الدرجة الواحدة من الحرية يتناسب طردياً مع جذر الجساءة k وعكسياً مع جذر الكتلة m." },
+        { q: "في تحليل الإجهادات، المستوى الرئيسي (Principal Plane) يتميز بأن إجهاد القص المؤثر عليه يساوي:", c: "صفراً (Zero Shear Stress)", w: ["القيمة العظمى المطلقة لإجهاد القص", "نصف إجهاد الشد العمودي", "ما لا نهاية"], exp: "المستويات الرئيسية هي المستويات التي تنعدم عليها إجهادات القص تماماً (τ = 0) وتصل فيها الإجهادات العمودية إلى قيمها العظمى والصغرى." }
+      ]
+    };
+
+    // 3. محرك توليد 30 سؤالاً تخصصياً لكل مقرر MEP مع خلط الإجابات
+    function generateMEP30Questions(subject) {
+      const theme = subject.theme || 'thermal';
+      const baseList = mepCoreQuestions[theme] || mepCoreQuestions['thermal'];
+      const fullList = [];
+
+      baseList.forEach(item => {
+        fullList.push({
+          question: item.q,
+          correctAnswer: item.c,
+          wrongAnswers: [...item.w],
+          explanation: item.exp
+        });
+      });
+
+      let qIndex = fullList.length + 1;
+      while (fullList.length < 30) {
+        let gen;
+        const code = subject.code;
+
+        if (code.includes('MPE113') || code.includes('MPE122')) {
+          // مسائل ديناميكا حرارية
+          const th = (qIndex % 4) * 100 + 600; // Kelvin
+          const tl = 300; // Kelvin
+          const eff = Math.round((1 - (tl / th)) * 100);
+          gen = {
+            question: `محرك حراري يعمل وفق دورة كارنو بين مصدر ساخن حرارته ${th} K ومشتت بارد حرارته ${tl} K. ما هي الكفاءة الحرارية القصوى للمحرك؟`,
+            correctAnswer: `${eff}%`,
+            wrongAnswers: [`${eff - 12}%`, `${eff + 15}%`, `${Math.round(eff / 2)}%`],
+            explanation: `كفاءة دورة كارنو القصوى: η = 1 - (TL / TH) = 1 - (${tl} / ${th}) = ${eff}%.`
+          };
+        } else if (code.includes('MPE215') || code.includes('MPE222') || code.includes('MPE321')) {
+          // مسائل ميكانيكا موائع
+          const dia = (qIndex % 3) + 2; // decimeter
+          const vel = (qIndex % 4) + 2; // m/s
+          const area = (Math.PI * Math.pow(dia / 10, 2) / 4);
+          const qVal = (area * vel * 1000).toFixed(1); // L/s
+          gen = {
+            question: `أنبوب قطره الداخلي D = ${dia * 10} cm يتدفق خلاله ماء بسرعة متوسطة v = ${vel} m/s. ما هو معدل التدفق الحجمي التقريبي؟`,
+            correctAnswer: `${qVal} L/s`,
+            wrongAnswers: [`${(qVal * 1.8).toFixed(1)} L/s`, `${(qVal * 0.5).toFixed(1)} L/s`, `${(qVal * 2.5).toFixed(1)} L/s`],
+            explanation: `Q = A · v = (π/4 · D²) · v. بالتعويض نجد أن التدفق الحجمي يساوي ${qVal} لتر/ثانية.`
+          };
+        } else if (code.includes('MPE224') || code.includes('MPE313') || code.includes('MPE411') || code.includes('MPE421')) {
+          // انتقال حرارة وتبريد
+          const qCool = (qIndex % 5) * 5 + 20; // kW
+          const wIn = 5; // kW
+          const cop = (qCool / wIn).toFixed(1);
+          gen = {
+            question: `منظومة تبريد انضغاطية تمتص حرارة من الحيز المبرد بمعدل QL = ${qCool} kW وتستهلك قدرة ضاغط قدرها W = ${wIn} kW. ما معامل الأداء (COP)؟`,
+            correctAnswer: `${cop}`,
+            wrongAnswers: [`${(cop * 1.5).toFixed(1)}`, `${(cop * 0.6).toFixed(1)}`, `${(cop - 1.2).toFixed(1)}`],
+            explanation: `معامل الأداء لمنظومة التبريد: COP = QL / W_in = ${qCool} / ${wIn} = ${cop}.`
+          };
+        } else if (code.includes('MPE323') || code.includes('MPE325') || code.includes('MPE414') || code.includes('MPE415')) {
+          // محركات وتوربينات
+          const engineConcepts = [
+            { t: "نسبة انضغاط محركات الديزل (Compression Ratio)", a: "تتراوح عادة بين 14:1 إلى 22:1 لتحقيق الاشتعال الذاتي بالهواء المضغوط", w: ["تتراوح بين 6:1 إلى 10:1 فقط", "تساوي دائماً 1:1", "تتجاوز 50:1"] },
+            { t: "التوربينات الغازية الصناعية تعمل وفق دورة", a: "دورة برايتون القياسية مفتوحة أو مغلقة (Brayton Cycle)", w: ["دورة ديزل الانضغاطية", "دورة ستيرلنج المغلقة", "دورة رانكن البخارية"] },
+            { t: "تثبيت شاحن توربيني (Turbocharger) بمحرك الاحتراق يهدف إلى", a: "زيادة كثافة الهواء الداخل للأسطوانات لرفع القدرة الحجمية والكفاءة", w: ["خفض حرارة غازات العادم إلى الصفر", "إلغاء الحاجة لزيت التزييت", "تقليل سرعة دوران عمود الكرنك"] }
+          ];
+          const eObj = engineConcepts[qIndex % engineConcepts.length];
+          gen = {
+            question: `في هندسة القوى الميكانيكية ضمن مقرر (${subject.name})، ما هي الحقيقة الهندسية الحاكمة لـ [${eObj.t}]؟`,
+            correctAnswer: eObj.a,
+            wrongAnswers: eObj.w,
+            explanation: `يمثل هذا المفهوم حجر الزاوية في تحسين كفاءة محركات الاحتراق ومولدات التوربينات الغازية.`
+          };
+        } else {
+          // بقية مقررات القسم
+          const genConcepts = [
+            { t: "الصيانة التنبؤية ومراقبة الاهتزازات (Vibration Analysis)", a: "تتيح اكتشاف عدم الاتزان وانهيار كراسي التحميل قبل وقوع الكوارث", w: ["تقتصر فقط على تزييت التروس يدوياً", "تطبق بعد كسر العمود الدوار بالكامل", "خاصة فقط بالمولدات الكهربية الصغيرة"] },
+            { t: "تأثير الصدمة المائية (Water Hammer) في خطوط الأنابيب", a: "ارتفاع حاد ومفاجئ في الضغط ناتج عن الإغلاق السريع للصمامات", w: ["هبوط دائم في لزوجة السائل", "تفريغ خط الأنابيب من الهواء", "زيادة فورية في كفاءة التوربين"] },
+            { t: "المبادلات الحرارية متوازية ومتعاكسة السريان (Counter-flow Heat Exchangers)", a: "السريان المتعاكس يوفر كفاءة وفارق درجات حرارة لوغاريتمي (LMTD) أعلى", w: ["السريان المتوازي يتفوق دائماً في التبادل الحراري", "كلا النوعين متطابقان تماماً في المساحة المطلوبة", "لا يخضعان لقوانين الحمل الحراري"] }
+          ];
+          const gObj = genConcepts[qIndex % genConcepts.length];
+          gen = {
+            question: `ضمن التخصص الهندسي لمقرر (${subject.name})، ما هو التفسير العلمي لـ [${gObj.t}]؟`,
+            correctAnswer: gObj.a,
+            wrongAnswers: gObj.w,
+            explanation: `من المبادئ والظواهر الأساسية التي يتعامل معها مهندس القوى الميكانيكية في بيئات التشغيل والتصميم.`
+          };
+        }
+
+        fullList.push(gen);
+        qIndex++;
+      }
+
+      // خلط عشوائي حقيقي لمواضع الإجابات (Random Shuffle)
+      return fullList.map((item, idx) => {
+        const rawOptions = [
+          { text: item.correctAnswer, isCorrect: true },
+          { text: item.wrongAnswers[0], isCorrect: false },
+          { text: item.wrongAnswers[1], isCorrect: false },
+          { text: item.wrongAnswers[2], isCorrect: false }
+        ];
+
+        for (let i = rawOptions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [rawOptions[i], rawOptions[j]] = [rawOptions[j], rawOptions[i]];
+        }
+
+        return {
+          id: idx + 1,
+          question: item.question,
+          options: rawOptions.map(o => o.text),
+          correct: rawOptions.findIndex(o => o.isCorrect),
+          explanation: item.explanation
+        };
+      });
+    }
+
+    // 4. حالة واجهة المستخدم والاختبار النشط
+    let activeLevel = '100';
+    let activeSubject = null;
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+
+    function selectLevel(lvl) {
+      activeLevel = lvl;
+
+      ['100', '200', '300', '400'].forEach(l => {
+        const card = document.getElementById(`lvl-card-${l}`);
+        if (l === lvl) {
+          card.className = 'ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-rose-500/20 to-orange-500/10 border-2 border-rose-400/50 shadow-lg shadow-rose-500/10 group';
+        } else {
+          card.className = 'ios-glass-card p-5 rounded-3xl cursor-pointer bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/15 group';
+        }
+      });
+
+      const count = mechCurriculum[lvl].term1.length + mechCurriculum[lvl].term2.length;
+      document.getElementById('level-summary-label').textContent = `مواد مستوى ${lvl} • ${count} مقرراً دراسياً (30 سؤال لكل مادة)`;
+      document.getElementById('mep-search-input').value = '';
+      renderSubjectsList();
+    }
+
+    function renderSubjectsList() {
+      const q = (document.getElementById('mep-search-input').value || '').toLowerCase().trim();
+      const levelData = mechCurriculum[activeLevel];
+
+      const t1Box = document.getElementById('term1-subjects-list');
+      const t2Box = document.getElementById('term2-subjects-list');
+
+      let list1 = levelData.term1;
+      let list2 = levelData.term2;
+
+      if (q) {
+        list1 = list1.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+        list2 = list2.filter(s => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+      }
+
+      document.getElementById('term1-count').textContent = `${list1.length} مواد`;
+      document.getElementById('term2-count').textContent = `${list2.length} مواد`;
+
+      t1Box.innerHTML = list1.length ? list1.map(s => createSubjectCard(s, 'term1')).join('') : `<p class="text-xs text-slate-400 text-center py-6">لا توجد مواد مطابقة في الترم الأول.</p>`;
+      t2Box.innerHTML = list2.length ? list2.map(s => createSubjectCard(s, 'term2')).join('') : `<p class="text-xs text-slate-400 text-center py-6">لا توجد مواد مطابقة في الترم الثاني.</p>`;
+    }
+
+    function createSubjectCard(item, term) {
+      const isTerm1 = term === 'term1';
+      const badgeClass = isTerm1 ? 'bg-rose-500/15 text-rose-300 border-rose-400/20' : 'bg-orange-500/15 text-orange-300 border-orange-400/20';
+      const iconColor = isTerm1 ? 'text-rose-300' : 'text-orange-300';
+
+      return `
+        <div class="ios-glass-card p-4 rounded-2xl flex items-center justify-between group transition">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center ${iconColor} text-base">
+              <i class="fa-solid ${item.icon}"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md border ${badgeClass}">${item.code}</span>
+                <span class="text-[10px] text-rose-300/80 font-bold bg-white/5 px-2 py-0.5 rounded-full border border-white/10">30 سؤال</span>
+              </div>
+              <h5 class="text-xs sm:text-sm font-bold text-white mt-1 group-hover:text-rose-300 transition">${item.name}</h5>
+            </div>
+          </div>
+          
+          <button onclick="startSubjectQuiz('${item.code}')" class="px-4 py-2.5 rounded-xl ios-btn text-xs font-bold text-rose-300 hover:text-white flex items-center gap-1.5 shadow-sm shrink-0">
+            <i class="fa-solid fa-play text-xs"></i>
+            <span>بدء الاختبار</span>
+          </button>
+        </div>
+      `;
+    }
+
+    // بدء كويز المادة المحددة
+    function startSubjectQuiz(code) {
+      let foundSubject = null;
+      ['100', '200', '300', '400'].forEach(lvl => {
+        const allInLvl = [...mechCurriculum[lvl].term1, ...mechCurriculum[lvl].term2];
+        const s = allInLvl.find(item => item.code === code);
+        if (s) foundSubject = s;
+      });
+
+      if (!foundSubject) return;
+
+      activeSubject = foundSubject;
+      activeQuestions = generateMEP30Questions(foundSubject);
+      currentQuestionIndex = 0;
+      userAnswers = new Array(30).fill(null);
+
+      // تهيئة القفز السريع
+      const jumpSelect = document.getElementById("quick-jump-select");
+      jumpSelect.innerHTML = "";
+      for (let i = 0; i < 30; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = `سؤال ${i + 1}`;
+        opt.className = "bg-slate-900 text-white";
+        jumpSelect.appendChild(opt);
+      }
+
+      document.getElementById("subjects-selection-view").classList.add("hidden");
+      document.getElementById("quiz-box-wrapper").classList.remove("hidden");
+      document.getElementById("quiz-container").classList.remove("hidden");
+      document.getElementById("result-container").classList.add("hidden");
+      document.getElementById("review-section").classList.add("hidden");
+      document.getElementById("back-to-subjects-btn").classList.remove("hidden");
+      document.getElementById("back-to-subjects-btn").classList.add("flex");
+
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function backToSubjectsView() {
+      document.getElementById("quiz-box-wrapper").classList.add("hidden");
+      document.getElementById("subjects-selection-view").classList.remove("hidden");
+      document.getElementById("back-to-subjects-btn").classList.add("hidden");
+      document.getElementById("back-to-subjects-btn").classList.remove("flex");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // عرض السؤال بنمط الاختيارات التخصصي للمادة
+    function renderQuestion() {
+      const q = activeQuestions[currentQuestionIndex];
+      const theme = activeSubject.theme || 'thermal';
+
+      document.getElementById("current-q-num").textContent = currentQuestionIndex + 1;
+      document.getElementById("total-q-num").textContent = `من 30`;
+      document.getElementById("subject-badge").textContent = `${activeSubject.code} • ${activeSubject.name}`;
+      document.getElementById("question-text").textContent = `${currentQuestionIndex + 1}. ${q.question}`;
+      
+      const progressPercent = ((currentQuestionIndex + 1) / 30) * 100;
+      document.getElementById("progress-bar").style.width = `${progressPercent}%`;
+      document.getElementById("quick-jump-select").value = currentQuestionIndex;
+
+      const optionsBox = document.getElementById("options-container");
+      optionsBox.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const isSelected = userAnswers[currentQuestionIndex] === idx;
+        const btn = document.createElement("button");
+        btn.type = "button";
+
+        if (theme === 'thermal') {
+          // نمط الديناميكا الحرارية والاحتراق والمحطات
+          btn.className = `opt-thermal w-full text-right p-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 transition ${isSelected ? 'selected text-rose-200' : 'text-slate-200'}`;
+          btn.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-lg bg-rose-950/60 border border-rose-500/30 flex items-center justify-center text-xs text-rose-400">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+              </span>
+              <span>${opt}</span>
+            </div>
+            <i class="fa-solid ${isSelected ? 'fa-circle-check text-rose-400' : 'fa-circle text-slate-700'} text-xs"></i>
+          `;
+
+        } else if (theme === 'fluid') {
+          // نمط ميكانيكا الموائع وسريان الأنابيب
+          btn.className = `opt-fluid w-full text-right p-4 rounded-2xl text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 transition ${isSelected ? 'selected text-sky-200' : 'text-slate-200'}`;
+          btn.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-xs text-sky-300">
+                <i class="fa-solid fa-droplet"></i>
+              </span>
+              <span>${opt}</span>
+            </div>
+            <i class="fa-solid ${isSelected ? 'fa-circle-dot text-sky-300' : 'fa-circle text-sky-500/20'} text-sm"></i>
+          `;
+
+        } else if (theme === 'heat') {
+          // نمط انتقال الحرارة والتبريد والتكييف
+          btn.className = `opt-heat w-full text-right p-4 rounded-2xl text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 transition ${isSelected ? 'selected text-orange-200' : 'text-slate-200'}`;
+          btn.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-xl bg-orange-500/20 border border-orange-400/40 flex items-center justify-center text-xs text-orange-300">
+                <i class="fa-solid fa-temperature-arrow-up"></i>
+              </span>
+              <span>${opt}</span>
+            </div>
+            <i class="fa-solid ${isSelected ? 'fa-square-check text-orange-300' : 'fa-square text-orange-500/20'} text-xs"></i>
+          `;
+
+        } else if (theme === 'turbo') {
+          // نمط الآلات التوربينية والمحركات ونظرية الماكينات
+          btn.className = `opt-turbo w-full text-right p-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 transition ${isSelected ? 'selected text-amber-200' : 'text-slate-200'}`;
+          btn.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-md bg-stone-800 border border-amber-500/30 flex items-center justify-center text-xs text-amber-400">
+                <i class="fa-solid fa-fan"></i>
+              </span>
+              <span>${opt}</span>
+            </div>
+            <i class="fa-solid ${isSelected ? 'fa-circle-check text-amber-400' : 'fa-gear text-stone-600'} text-xs"></i>
+          `;
+
+        } else {
+          // نمط التصميم الميكانيكي وتحليل الإجهادات والاهتزازات
+          btn.className = `opt-design w-full text-right p-4 rounded-2xl text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 transition ${isSelected ? 'selected text-purple-200' : 'text-slate-200'}`;
+          btn.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full ${isSelected ? 'bg-purple-400 ring-4 ring-purple-400/20' : 'bg-white/20'}"></span>
+              <span class="leading-relaxed">${opt}</span>
+            </div>
+            <i class="fa-solid ${isSelected ? 'fa-check text-purple-400' : 'fa-angle-left text-white/20'} text-sm"></i>
+          `;
+        }
+
+        btn.onclick = () => selectOption(idx);
+        optionsBox.appendChild(btn);
+      });
+
+      document.getElementById("prev-btn").disabled = currentQuestionIndex === 0;
+
+      if (currentQuestionIndex === 29) {
+        document.getElementById("next-btn").classList.add("hidden");
+        document.getElementById("submit-btn").classList.remove("hidden");
+        document.getElementById("submit-btn").classList.add("inline-flex");
+      } else {
+        document.getElementById("next-btn").classList.remove("hidden");
+        document.getElementById("submit-btn").classList.add("hidden");
+        document.getElementById("submit-btn").classList.remove("inline-flex");
+      }
+    }
+
+    function selectOption(index) {
+      userAnswers[currentQuestionIndex] = index;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < 29) {
+        currentQuestionIndex++;
+        renderQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      currentQuestionIndex = parseInt(idx, 10);
+      renderQuestion();
+    }
+
+    function submitQuiz() {
+      const unanswered = userAnswers.filter(a => a === null).length;
+      if (unanswered > 0) {
+        if (!confirm(`تنبيه: لديك ${unanswered} سؤالاً لم تجب عليها بعد من أصل 30 سؤالاً. هل تريد بالتأكيد إنهاء الاختبار وتسليمه؟`)) {
+          return;
+        }
+      }
+
+      let score = 0;
+      activeQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.correct) {
+          score++;
+        }
+      });
+
+      const percentage = Math.round((score / 30) * 100);
+
+      document.getElementById("quiz-container").classList.add("hidden");
+      const resultBox = document.getElementById("result-container");
+      resultBox.classList.remove("hidden");
+
+      document.getElementById("result-subject-title").textContent = `نتيجتك في كويز: ${activeSubject.name}`;
+      document.getElementById("score-val").textContent = score;
+      document.getElementById("percent-val").textContent = `${percentage}%`;
+
+      const badge = document.getElementById("result-badge");
+      const status = document.getElementById("status-val");
+      const icon = document.getElementById("result-icon");
+
+      if (percentage >= 85) {
+        badge.textContent = "مهندس قوى ميكانيكية متميز ومبهر ⚙️";
+        badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 border border-rose-400/30 text-rose-300";
+        status.textContent = "امتياز";
+        status.className = "text-base font-bold text-rose-300 mt-1";
+        icon.className = "fa-solid fa-trophy text-rose-300";
+      } else if (percentage >= 65) {
+        badge.textContent = "مستوى جيد جداً 👍";
+        badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-orange-500/20 border border-orange-400/30 text-orange-300";
+        status.textContent = "جيد جداً";
+        status.className = "text-base font-bold text-orange-400 mt-1";
+        icon.className = "fa-solid fa-award text-orange-300";
+      } else if (percentage >= 50) {
+        badge.textContent = "مقبول - راجع المراجع الهندسية 📚";
+        badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-yellow-500/20 border border-yellow-400/30 text-yellow-300";
+        status.textContent = "مقبول";
+        status.className = "text-base font-bold text-yellow-400 mt-1";
+        icon.className = "fa-solid fa-medal text-yellow-400";
+      } else {
+        badge.textContent = "تحتاج لمراجعة شاملة للمقرر 💡";
+        badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 border border-rose-400/30 text-rose-300";
+        status.textContent = "راسب";
+        status.className = "text-base font-bold text-rose-400 mt-1";
+        icon.className = "fa-solid fa-triangle-exclamation text-rose-400";
+      }
+
+      buildReview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function buildReview() {
+      const list = document.getElementById("review-items");
+      list.innerHTML = "";
+
+      activeQuestions.forEach((q, i) => {
+        const userChoice = userAnswers[i];
+        const isCorrect = userChoice === q.correct;
+        const card = document.createElement("div");
+
+        card.className = `p-4 sm:p-5 rounded-2xl border text-xs leading-relaxed ${
+          isCorrect 
+            ? "bg-emerald-500/10 border-emerald-500/30 text-slate-200" 
+            : "bg-rose-500/10 border-rose-500/30 text-slate-200"
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div>
+              <span class="text-[10px] font-mono font-bold text-rose-300 px-2 py-0.5 rounded bg-white/10 ml-1">سؤال ${i + 1} من 30</span>
+              <span class="font-bold text-white text-sm block sm:inline mt-1 sm:mt-0">${q.question}</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
+              isCorrect ? "bg-emerald-500/20 text-emerald-300" : "bg-rose-500/20 text-rose-300"
+            }">
+              ${isCorrect ? '<i class="fa-solid fa-check ml-1"></i>صحيحة' : '<i class="fa-solid fa-xmark ml-1"></i>خاطئة'}
+            </span>
+          </div>
+
+          <div class="space-y-1.5 mt-2 text-slate-300">
+            <p><strong>إجابتك:</strong> <span class="${isCorrect ? 'text-emerald-300 font-bold' : 'text-rose-300 font-bold'}">${userChoice !== null ? q.options[userChoice] : "لم يتم الاختيار"}</span></p>
+            ${!isCorrect ? `<p><strong>الإجابة النموذجية:</strong> <span class="text-rose-300 font-bold">${q.options[q.correct]}</span></p>` : ""}
+            <p class="text-slate-400 text-[11px] pt-1 border-t border-white/5">💡 <strong>الشرح والتوضيح العلمي:</strong> ${q.explanation}</p>
+          </div>
+        `;
+
+        list.appendChild(card);
+      });
+    }
+
+    function toggleReview() {
+      const rev = document.getElementById("review-section");
+      rev.classList.toggle("hidden");
+      if (!rev.classList.contains("hidden")) {
+        rev.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function restartCurrentQuiz() {
+      startSubjectQuiz(activeSubject.code);
+    }
+
+    // ربط محرك البحث اللحظي والتشغيل عند التحميل
+    document.getElementById("mep-search-input").addEventListener("input", renderSubjectsList);
+    window.addEventListener("DOMContentLoaded", () => {
+      selectLevel('100');
+    });
+  </script>
+
+</body>
+</html>
