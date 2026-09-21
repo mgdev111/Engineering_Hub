@@ -42,7 +42,7 @@
       pointer-events: none;
     }
 
-    /* تأثير الزجاج الشفاف الفائق */
+    /* تأثير الزجاج الشفاف */
     .ios-glass {
       background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(35px) saturate(190%);
@@ -118,7 +118,7 @@
         </div>
       </div>
 
-      <!-- زر الدخول المباشر بحساب Google -->
+      <!-- زر الدخول بحساب Google -->
       <button 
         type="button" 
         onclick="signInWithGoogle()" 
@@ -144,7 +144,7 @@
       <!-- نموذج البيانات التفاعلي -->
       <form onsubmit="handleFormSubmit(event)" class="space-y-3.5">
         
-        <!-- حقل الاسم الكامل (يظهر في إنشاء الحساب) -->
+        <!-- حقل الاسم الكامل -->
         <div id="name-field-group" class="space-y-1.5 hidden">
           <label class="block text-xs font-bold text-slate-300 mr-1">الاسم الكامل</label>
           <div class="relative">
@@ -201,7 +201,7 @@
           </div>
         </div>
 
-        <!-- حقل تأكيد كلمة المرور (يظهر في إنشاء الحساب) -->
+        <!-- حقل تأكيد كلمة المرور -->
         <div id="confirm-pwd-group" class="space-y-1.5 hidden">
           <label class="block text-xs font-bold text-slate-300 mr-1">تأكيد كلمة المرور</label>
           <div class="relative">
@@ -249,7 +249,7 @@
         </button>
       </div>
 
-      <!-- رابط التبديل (إنشاء حساب من تحت) -->
+      <!-- رابط التبديل -->
       <div class="pt-3 border-t border-white/10 text-center">
         <p id="toggle-auth-prompt" class="text-xs text-slate-400">
           ليس لديك حساب؟ 
@@ -270,20 +270,30 @@
     <p>منصة Engineer Hub 2026 • كلية الهندسة جامعة قنا</p>
   </footer>
 
-  <!-- ================= سكريبت Firebase (Auth + Firestore Users & Admins) ================= -->
+  <!-- ================= سكريبت Firebase المحسن لتسجيل وتتبع البيانات والموقع ================= -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { 
       getAuth, 
       signInWithPopup, 
+      signInWithRedirect,
+      getRedirectResult,
       GoogleAuthProvider,
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
       sendEmailVerification,
       updateProfile
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    // استدعاء Firestore لحفظ بيانات الطلاب والتحقق من الأدمن
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { 
+      getFirestore, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      collection, 
+      addDoc, 
+      serverTimestamp, 
+      increment 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCoMh9_Cd72KU8ApjjMe2GSvPtH8CgkuOY",
@@ -304,69 +314,186 @@
     let isSignUpMode = false;
     let currentUserUnverified = null;
 
-    // 1. فحص هل الإيميل مسجل كـ admin في Firebase Firestore
+    // 🌐 1. دالة جلب الموقع الجغرافي والـ IP وبيانات الشبكة
+    async function getUserLocationAndNetwork() {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500); // مهلة 3.5 ثوانٍ كحد أقصى لتجنب بطء النت
+
+        const response = await fetch("https://ipwho.is/", { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const data = await response.json();
+
+        if (data && data.success !== false) {
+          return {
+            ip: data.ip || "غير محدد",
+            country: data.country || "غير محدد",
+            city: data.city || "غير محدد",
+            region: data.region || "غير محدد",
+            latitude: data.latitude || null,
+            longitude: data.longitude || null,
+            // رابط مباشر لمكانه على خرائط جوجل
+            googleMapsUrl: (data.latitude && data.longitude) 
+              ? `https://www.google.com/maps?q=${data.latitude},${data.longitude}` 
+              : "غير متاح",
+            isp: data.connection?.isp || "مزود غير معروف"
+          };
+        }
+      } catch (err) {
+        console.warn("⚠️ لم نتمكن من جلب الموقع الجغرافي:", err);
+      }
+
+      return {
+        ip: "تعذر التحديد",
+        country: "تعذر التحديد",
+        city: "تعذر التحديد",
+        region: "تعذر التحديد",
+        latitude: null,
+        longitude: null,
+        googleMapsUrl: "غير متاح",
+        isp: "تعذر التحديد"
+      };
+    }
+
+    // 📱 2. دالة استخراج بيانات ونوع الجهاز والمتصفح
+    function getUserDeviceInfo() {
+      const ua = navigator.userAgent;
+      let browser = "غير معروف";
+      let os = "غير معروف";
+
+      // المتصفح
+      if (ua.includes("Firefox")) browser = "Firefox";
+      else if (ua.includes("SamsungBrowser")) browser = "Samsung Internet";
+      else if (ua.includes("Edg")) browser = "Microsoft Edge";
+      else if (ua.includes("Chrome")) browser = "Google Chrome";
+      else if (ua.includes("Safari")) browser = "Apple Safari";
+
+      // نظام التشغيل
+      if (ua.includes("Android")) os = "Android";
+      else if (ua.includes("iPhone")) os = "iOS (iPhone)";
+      else if (ua.includes("iPad")) os = "iPadOS";
+      else if (ua.includes("Windows")) os = "Windows PC";
+      else if (ua.includes("Mac OS")) os = "macOS";
+      else if (ua.includes("Linux")) os = "Linux";
+
+      return {
+        browser: browser,
+        os: os,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        isMobile: /Android|iPhone|iPad|iPod/i.test(ua),
+        userAgent: ua
+      };
+    }
+
+    // 3. فحص هل المستخدم مسجل كـ admin
     async function checkIsAdminFromFirebase(email) {
       if (!email) return false;
       try {
         const cleanEmail = email.trim().toLowerCase();
-        const adminDocRef = doc(db, "admins", cleanEmail);
-        const adminDoc = await getDoc(adminDocRef);
+        const adminDoc = await getDoc(doc(db, "admins", cleanEmail));
         return adminDoc.exists() && adminDoc.data().role === "admin";
       } catch (err) {
-        console.error("Firestore Check Error:", err);
         return false;
       }
     }
 
-    // 🌟 2. دالة حفظ وتسجيل بيانات الطالب في مجموعة users داخل فايربيس
+    // 🔥 4. الدالة الشاملة لحفظ وتحديث كل بيانات وموقع المستخدم في Firebase
     async function saveUserToFirestore(user, customName = null, authProvider = "password") {
       if (!user || !user.email) return;
       try {
         const cleanEmail = user.email.trim().toLowerCase();
         const userDocRef = doc(db, "users", cleanEmail);
-        
-        // التحقق من الرتبة الحالية
+
+        // جلب الموقع وبيانات الجهاز
+        const [locationData, deviceInfo] = await Promise.all([
+          getUserLocationAndNetwork(),
+          Promise.resolve(getUserDeviceInfo())
+        ]);
+
         const isAdmin = await checkIsAdminFromFirebase(cleanEmail);
-        
-        // بيانات الطالب
+        const loginTimeStr = new Date().toLocaleString('ar-EG', { dateStyle: 'full', timeStyle: 'medium' });
+
+        // البيانات الرئيسية المحدثة في بروفايل المستخدم
         const userData = {
           uid: user.uid,
           email: cleanEmail,
-          fullName: customName || user.displayName || "مهندس / طالب جديد",
+          fullName: customName || user.displayName || "مهندس / طالب",
           photoURL: user.photoURL || null,
           provider: authProvider,
           role: isAdmin ? "admin" : "student",
           emailVerified: user.emailVerified,
-          lastLogin: new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }),
-          createdAt: user.metadata?.creationTime || new Date().toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' })
+          
+          // بيانات آخر دخول
+          lastLoginTime: loginTimeStr,
+          lastLoginTimestamp: serverTimestamp(),
+          loginCount: increment(1), // زيادة عداد الدخول تلقائياً
+          
+          // 📍 بيانات الموقع والشبكة الحالية
+          ip: locationData.ip,
+          country: locationData.country,
+          region: locationData.region,
+          city: locationData.city,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+          googleMapsUrl: locationData.googleMapsUrl,
+          isp: locationData.isp,
+
+          // 💻 بيانات الجهاز
+          deviceOS: deviceInfo.os,
+          browser: deviceInfo.browser,
+          screenResolution: deviceInfo.screenResolution,
+          isMobile: deviceInfo.isMobile
         };
 
-        // حفظ وتحديث بيانات المستخدم بدون مسح البيانات السابقة
+        // 1. تحديث مستند المستخدم الرئيسي
         await setDoc(userDocRef, userData, { merge: true });
-        console.log("✅ تم حفظ بيانات الطالب في Firestore بنجاح:", cleanEmail);
+
+        // 2. إضافة جلسة الدخول في سجل الحركات (login_history) لمعرفة تفاصيل كل دخول
+        const historyRef = collection(db, "users", cleanEmail, "login_history");
+        await addDoc(historyRef, {
+          loginAt: loginTimeStr,
+          timestamp: serverTimestamp(),
+          ip: locationData.ip,
+          city: locationData.city,
+          country: locationData.country,
+          maps: locationData.googleMapsUrl,
+          device: `${deviceInfo.os} - ${deviceInfo.browser}`,
+          provider: authProvider
+        });
+
+        console.log("✅ تم تحديث وتوثيق بيانات الطالب وموقعه في فايربيس بنجاح:", cleanEmail);
 
       } catch (err) {
-        console.error("❌ خطأ أثناء حفظ بيانات الطالب في فايربيس:", err);
+        console.error("❌ خطأ أثناء حفظ بيانات الطالب وموقعه:", err);
       }
     }
 
-    // 3. توجيه المستخدم حسب رتبته في فايربيس
+    // التحقق التلقائي عند العودة من إعادة توجيه جوجل (للموبايل)
+    window.addEventListener('load', async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          await saveUserToFirestore(result.user, result.user.displayName, "google");
+          await routeUserAfterAuth(result.user);
+        }
+      } catch (err) {
+        console.error("Redirect Error:", err);
+      }
+    });
+
+    // توجيه المستخدم حسب الرتبة
     async function routeUserAfterAuth(user) {
       const isAdmin = await checkIsAdminFromFirebase(user.email);
       if (isAdmin) {
-        showToast('👑 تم التعرف عليك كـ مشرف للمنصة! جارٍ فتح لوحة الإدارة...');
-        setTimeout(() => {
-          window.location.href = 'admin.html';
-        }, 1200);
+        showToast('👑 مرحباً بك يا مشرف المنصة! جارٍ فتح لوحة الإدارة...');
+        setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
       } else {
-        showToast(`🎉 مرحباً بك يا باشمهندس (${user.displayName || ''})! جارٍ نقلك للرئيسية...`);
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1200);
+        showToast(`🎉 مرحباً بك يا باشمهندس (${user.displayName || ''})!`);
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
       }
     }
 
-    // 4. التبديل بين تسجيل الدخول وإنشاء الحساب
+    // التبديل بين الدخول وإنشاء الحساب
     window.toggleAuthMode = function(toSignUp) {
       isSignUpMode = toSignUp;
       const title = document.getElementById('form-main-title');
@@ -408,23 +535,17 @@
       }
     };
 
-    // 5. معالجة النموذج (إنشاء حساب أو تسجيل دخول)
+    // معالجة فورم الإيميل وكلمة السر
     window.handleFormSubmit = async function(e) {
       e.preventDefault();
 
-      if (window.location.protocol === 'file:') {
-        showToast('⚠️ شغل الصفحة عبر Live Server في VS Code وليس بالضغط المباشر على الملف.');
-        return;
-      }
-
-      const email = document.getElementById('user-email').value.trim();
+      const email = document.getElementById('user-email').value.trim().toLowerCase();
       const password = document.getElementById('user-password').value.trim();
       const submitBtn = document.getElementById('submit-action-btn');
 
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>جارٍ المعالجة...</span>`;
+      submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>جارٍ المعالجة وتسجيل البيانات...</span>`;
 
-      // ================= أ) وضع إنشاء الحساب =================
       if (isSignUpMode) {
         const fullname = document.getElementById('user-fullname').value.trim();
         const confirmPassword = document.getElementById('user-confirm-password').value.trim();
@@ -432,7 +553,7 @@
         if (password !== confirmPassword) {
           showToast('❌ كلمتا المرور غير متطابقتين!');
           submitBtn.disabled = false;
-          submitBtn.innerHTML = `<span>إنشاء الحساب وإرسال رابط التفعيل</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
+          submitBtn.innerHTML = `<span>إنشاء الحساب</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
           return;
         }
 
@@ -444,15 +565,13 @@
             await updateProfile(user, { displayName: fullname });
           }
 
-          // حفظ بيانات الطالب فوراً في فايربيس (مجموعة users)
+          // حفظ كامل البيانات والموقع
           await saveUserToFirestore(user, fullname, "password");
-
-          // إرسال رسالة التأكيد إلى Gmail
           await sendEmailVerification(user);
           currentUserUnverified = user;
 
           document.getElementById('verification-notice').classList.remove('hidden');
-          showToast('📨 تم إنشاء الحساب بنجاح! تفقد صندوق بريدك لتأكيده.');
+          showToast('📨 تم إنشاء الحساب وحفظ بياناتك! تفقد صندوق البريد للتأكيد.');
           toggleAuthMode(false);
           document.getElementById('verification-notice').classList.remove('hidden');
 
@@ -461,88 +580,83 @@
             showToast('⚠️ هذا البريد مسجل مسبقاً! قم بتسجيل الدخول مباشرة.');
             toggleAuthMode(false);
           } else {
-            showToast('❌ تعذر إنشاء الحساب: ' + error.message);
+            showToast('❌ خطأ: ' + error.message);
           }
         } finally {
           submitBtn.disabled = false;
           submitBtn.innerHTML = `<span>تسجيل الدخول</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
         }
-      } 
-      // ================= ب) وضع تسجيل الدخول =================
-      else {
+      } else {
         try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const user = userCredential.user;
 
-          // تحديث بيانات تسجيل دخوله في فايربيس
+          // تحديث بيانات الجلسة والموقع حتى لو كان مسجل قديم
           await saveUserToFirestore(user, null, "password");
 
-          // فحص هل ضغط على الرابط في Gmail أم لا
           if (!user.emailVerified) {
             currentUserUnverified = user;
             document.getElementById('verification-notice').classList.remove('hidden');
-            showToast('⚠️ حسابك غير مفعل بعد! افتح رسالة Gmail واضغط على رابط التفعيل.');
+            showToast('⚠️ حسابك غير مفعل بعد! افتح رسالة Gmail واضغط على التفعيل.');
             submitBtn.disabled = false;
             submitBtn.innerHTML = `<span>تسجيل الدخول</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
             return;
           }
 
-          // تم التحقق والتفعيل -> توجيه المستخدم
           await routeUserAfterAuth(user);
 
         } catch (error) {
-          if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-            showToast('❌ البريد أو كلمة المرور غير صحيحة.');
-          } else {
-            showToast('❌ خطأ: ' + error.message);
-          }
+          showToast('❌ خطأ في البريد أو كلمة المرور.');
           submitBtn.disabled = false;
           submitBtn.innerHTML = `<span>تسجيل الدخول</span> <i class="fa-solid fa-arrow-left text-xs"></i>`;
         }
       }
     };
 
-    // 6. تسجيل الدخول بجوجل وحفظ بياناته في users
+    // تسجيل الدخول بجوجل
     window.signInWithGoogle = async function() {
-      if (window.location.protocol === 'file:') {
-        showToast('⚠️ شغل الصفحة عبر Live Server في VS Code.');
-        return;
-      }
-
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const btn = document.getElementById('google-btn');
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-sm"></i> <span>جارٍ الاتصال بجوجل...</span>`;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-sm"></i> <span>جارٍ الاتصال وتسجيل الموقع...</span>`;
 
       try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
+        if (isMobile) {
+          await signInWithRedirect(auth, googleProvider);
+        } else {
+          const result = await signInWithPopup(auth, googleProvider);
+          const user = result.user;
 
-        // حفظ وتحديث بيانات حساب جوجل تلقائياً في فايربيس (مجموعة users)
-        await saveUserToFirestore(user, user.displayName, "google");
-
-        await routeUserAfterAuth(user);
+          // حفظ كافة البيانات والموقع في فايربيس
+          await saveUserToFirestore(user, user.displayName, "google");
+          await routeUserAfterAuth(user);
+        }
       } catch (error) {
-        showToast('❌ خطأ: ' + error.message);
-        btn.disabled = false;
-        btn.innerHTML = `<span>المتابعة السريعة باستخدام حساب Google</span>`;
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+          await signInWithRedirect(auth, googleProvider);
+        } else {
+          showToast(`❌ خطأ (${error.code})`);
+          btn.disabled = false;
+          btn.innerHTML = `<span>المتابعة السريعة باستخدام حساب Google</span>`;
+        }
       }
     };
 
-    // 7. إعادة إرسال رابط التفعيل
+    // إعادة إرسال رابط التفعيل
     window.resendVerificationLink = async function() {
       if (currentUserUnverified) {
         try {
           await sendEmailVerification(currentUserUnverified);
-          showToast('📨 تم إعادة إرسال رابط التفعيل إلى بريدك الإلكتروني.');
+          showToast('📨 تم إعادة إرسال رابط التفعيل إلى بريدك.');
         } catch (err) {
           showToast('❌ خطأ أثناء الإرسال: ' + err.message);
         }
       } else {
-        showToast('⚠️ اكتب بريدك وكلمة المرور واضغط تسجيل الدخول أولاً.');
+        showToast('⚠️ اكتب البريد وكلمة المرور واضغط تسجيل الدخول أولاً.');
       }
     };
 
-    // إظهار/إخفاء كلمة المرور
+    // إظهار / إخفاء كلمة المرور
     window.togglePasswordVisibility = function(inputId, iconId) {
       const input = document.getElementById(inputId);
       const icon = document.getElementById(iconId);
@@ -555,7 +669,7 @@
       }
     };
 
-    // الإشعارات المنبثقة
+    // الإشعارات
     window.showToast = function(msg) {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
