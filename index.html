@@ -14,56 +14,6 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- ================= 🔒 كود حارس الدخول (AUTH GUARD) ================= -->
-  <!-- 1. إخفاء محتوى الصفحة فوراً قبل التحميل لمنع أي وميض للزائر غير المسجل -->
-  <style id="auth-hide-style">
-    body { display: none !important; }
-  </style>
-
-  <!-- 2. فحص حالة المستخدم في Firebase قبل فتح الصفحة -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCoMh9_Cd72KU8ApjjMe2GSvPtH8CgkuOY",
-      authDomain: "engineering-hub-aa378.firebaseapp.com",
-      projectId: "engineering-hub-aa378",
-      storageBucket: "engineering-hub-aa378.firebasestorage.app",
-      messagingSenderId: "837394827967",
-      appId: "1:837394827967:web:bdf9490a1cc74fdc90140a",
-      measurementId: "G-F7K6JLN3EF"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      // إذا لم يكن مسجل دخول أو لم يفعل بريده -> تحويل فوري لصفحة الدخول
-      if (!user || !user.emailVerified) {
-        window.location.replace("login.html");
-      } else {
-        // إذا كان مسجلاً -> إظهار الصفحة وعرض اسمه
-        const hideStyle = document.getElementById("auth-hide-style");
-        if (hideStyle) hideStyle.remove();
-        document.body.style.display = "flex";
-
-        const welcomeText = document.getElementById("user-name-display");
-        if (welcomeText) {
-          welcomeText.textContent = user.displayName || user.email.split('@')[0];
-        }
-      }
-    });
-
-    // دالة تسجيل الخروج
-    window.logoutUser = async function() {
-      if (confirm("هل تريد تسجيل الخروج من المنظومة؟")) {
-        await signOut(auth);
-        window.location.replace("login.html");
-      }
-    };
-  </script>
-
   <style>
     * {
       font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -92,7 +42,7 @@
       pointer-events: none;
     }
 
-    /* تأثير الزجاج الشفاف الفائق */
+    /* تأثير الزجاج الشفاف */
     .ios-glass {
       background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(35px) saturate(190%);
@@ -113,8 +63,8 @@
     .ios-glass-card:hover {
       background: rgba(255, 255, 255, 0.09);
       border-color: rgba(56, 189, 248, 0.4);
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
     }
 
     .ios-btn {
@@ -130,18 +80,189 @@
       border-color: rgba(255, 255, 255, 0.4);
       transform: scale(1.02);
     }
+
+    /* ================= 🎬 تأثيرات الأنيميشن للكروت (مربوطة بـ page-loaded) ================= */
+    @keyframes slideFromTop {
+      0% { opacity: 0; transform: translateY(-50px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes slideFromBottom {
+      0% { opacity: 0; transform: translateY(60px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes slideFromRight {
+      0% { opacity: 0; transform: translateX(80px) scale(0.95); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @keyframes slideFromLeft {
+      0% { opacity: 0; transform: translateX(-80px) scale(0.95); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    /* تظل العناصر مخفية في البداية */
+    .anim-top, .anim-bottom, .anim-right, .anim-left {
+      opacity: 0;
+    }
+
+    /* تبدأ الحركات فقط بعد إضافة class: page-loaded */
+    body.page-loaded .anim-top { animation: slideFromTop 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    body.page-loaded .anim-bottom { animation: slideFromBottom 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    body.page-loaded .anim-right { animation: slideFromRight 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    body.page-loaded .anim-left { animation: slideFromLeft 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    .delay-100 { animation-delay: 0.1s !important; }
+    .delay-200 { animation-delay: 0.2s !important; }
+    .delay-300 { animation-delay: 0.35s !important; }
+    .delay-400 { animation-delay: 0.5s !important; }
+
+    /* ================= 🚀 أنيميشن شاشة الإنترو (Splash Screen) ================= */
+    #splash-screen {
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #splash-screen.fade-out {
+      opacity: 0 !important;
+      transform: scale(1.08) !important;
+      pointer-events: none !important;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 35px rgba(56, 189, 248, 0.6)); }
+    }
+    .splash-logo-glow {
+      animation: pulseGlow 2.4s infinite ease-in-out;
+    }
+
+    @keyframes progressAnim {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .splash-progress-bar {
+      animation: progressAnim 2.3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    }
   </style>
 </head>
 
-<body class="min-h-screen relative flex-col justify-between">
+<body class="min-h-screen relative flex flex-col justify-between">
+
+  <!-- ================= 🎬 شاشة الإنترو الافتتاحية (SPLASH INTRO OVERLAY) ================= -->
+  <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-between p-8 bg-[#050711]">
+    <!-- خلفية أنوار الإنترو -->
+    <div class="ios-mesh-bg opacity-70"></div>
+
+    <!-- جزء فارغ للموازنة -->
+    <div class="h-6"></div>
+
+    <!-- المحتوى الأوسط للإنترو -->
+    <div class="relative z-10 flex flex-col items-center text-center space-y-6 max-w-sm">
+      
+      <!-- اللوجو مع نبضات الهالة المضيئة -->
+      <div class="relative flex items-center justify-center">
+        <div class="absolute w-28 h-28 rounded-3xl bg-cyan-500/20 blur-xl splash-logo-glow"></div>
+        <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-cyan-500/30 via-blue-600/30 to-indigo-600/30 border border-cyan-400/40 flex items-center justify-center text-white shadow-2xl backdrop-blur-2xl relative z-10">
+          <i class="fa-solid fa-graduation-cap text-4xl text-cyan-300 drop-shadow-[0_0_15px_rgba(56,189,248,0.8)]"></i>
+        </div>
+      </div>
+
+      <!-- النصوص الترحيبية -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-center gap-2">
+          <h1 class="text-3xl font-black tracking-wider bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+            Engineer Hub
+          </h1>
+          <span class="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2.5 py-0.5 rounded-full font-black">2026</span>
+        </div>
+        <p class="text-xs text-slate-400 font-medium">بوابة كلية الهندسة • جامعة قنا</p>
+      </div>
+
+      <!-- شريط التحميل الاحترافي -->
+      <div class="w-48 space-y-2 pt-4">
+        <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden border border-white/10 backdrop-blur-md">
+          <div class="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 rounded-full splash-progress-bar"></div>
+        </div>
+        <p class="text-[10px] text-slate-400 font-medium animate-pulse">جاري تهيئة المنظومة الأكاديمية...</p>
+      </div>
+    </div>
+
+    <!-- بصمة المطور أسفل الإنترو -->
+    <div class="relative z-10 text-center">
+      <p class="text-[11px] text-slate-500 tracking-wider">
+        Developed by <strong class="text-slate-300 font-bold">Marwan Gaber</strong>
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ================= 🔒 كود المصادقة والتحكم في الإنترو ================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoMh9_Cd72KU8ApjjMe2GSvPtH8CgkuOY",
+      authDomain: "engineering-hub-aa378.firebaseapp.com",
+      projectId: "engineering-hub-aa378",
+      storageBucket: "engineering-hub-aa378.firebasestorage.app",
+      messagingSenderId: "837394827967",
+      appId: "1:837394827967:web:bdf9490a1cc74fdc90140a",
+      measurementId: "G-F7K6JLN3EF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let authStateResult = null;
+    let authChecked = false;
+
+    // فحص المستخدم في الخلفية
+    onAuthStateChanged(auth, (user) => {
+      authChecked = true;
+      authStateResult = (user && user.emailVerified) ? user : null;
+    });
+
+    // إنهاء شاشة الإنترو بعد 2.4 ثانية والتوجيه بسلاسة
+    setTimeout(() => {
+      const splash = document.getElementById("splash-screen");
+      
+      if (!authStateResult) {
+        // إذا لم يكن مسجلاً -> تحويل لصفحة تسجيل الدخول
+        if (splash) splash.classList.add("fade-out");
+        setTimeout(() => {
+          window.location.replace("login.html");
+        }, 400);
+      } else {
+        // إذا كان مسجلاً -> عرض اسمه وإخفاء الإنترو وإطلاق حركات الصفحة
+        const welcomeText = document.getElementById("user-name-display");
+        if (welcomeText) {
+          welcomeText.textContent = authStateResult.displayName || authStateResult.email.split('@')[0];
+        }
+
+        if (splash) {
+          splash.classList.add("fade-out");
+          // تشغيل أنيميشن عناصر الصفحة فور بدء تلاشي الإنترو
+          document.body.classList.add("page-loaded");
+          setTimeout(() => splash.remove(), 700);
+        }
+      }
+    }, 2400);
+
+    // دالة تسجيل الخروج
+    window.logoutUser = async function() {
+      if (confirm("هل تريد تسجيل الخروج من المنظومة؟")) {
+        await signOut(auth);
+        window.location.replace("login.html");
+      }
+    };
+  </script>
+
   <!-- خلفية الألوان الانسيابية -->
   <div class="ios-mesh-bg"></div>
 
   <!-- حاوية الإشعارات -->
   <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
 
-  <!-- ================= NAVBAR ================= -->
-  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+  <!-- ================= NAVBAR (ينزل من الأعلى) ================= -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full anim-top">
     <div class="ios-glass rounded-[28px] px-6 h-20 py-3 flex items-center justify-between">
       
       <!-- شعار المنظومة -->
@@ -180,26 +301,24 @@
   <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 space-y-8 w-full my-auto">
 
     <!-- ================= DEVELOPER CREDIT BADGES (TOP) ================= -->
-
-      <div class="flex justify-center w-full" dir="ltr">
-        <div class="ios-glass px-5 py-2.5 rounded-full border border-blue-500/25 shadow-xl shadow-black/40 flex flex-wrap items-center justify-center gap-2 sm:gap-3 backdrop-blur-xl">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-code text-blue-500 text-xs"></i>
-            <span class="text-xs text-slate-400 font-semibold"> طالب في الفرقة الثانية حاسبات ومعلومات بجامعة قنا. &amp; مطور تطبيقات متكاملة</span>
-            <span class="hidden sm:inline text-white/20">•</span>
-            <span class="font-black text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-blue-400 bg-clip-text text-transparent">
-              Marwan Gaber
-            </span>
-          </div>
-          <span class="text-[11px] text-slate-300 font-medium tracking-normal">
-            مصمم &amp; تم تطويره بواسطة
+    <div class="flex justify-center w-full anim-top delay-100" dir="ltr">
+      <div class="ios-glass px-5 py-2.5 rounded-full border border-blue-500/25 shadow-xl shadow-black/40 flex flex-wrap items-center justify-center gap-2 sm:gap-3 backdrop-blur-xl">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-code text-blue-500 text-xs"></i>
+          <span class="text-xs text-slate-400 font-semibold"> طالب في الفرقة الثانية حاسبات ومعلومات بجامعة قنا. &amp; مطور تطبيقات متكاملة</span>
+          <span class="hidden sm:inline text-white/20">•</span>
+          <span class="font-black text-base tracking-wide bg-gradient-to-r from-white via-slate-100 to-blue-400 bg-clip-text text-transparent">
+            Marwan Gaber
           </span>
         </div>
+        <span class="text-[11px] text-slate-300 font-medium tracking-normal">
+          مصمم &amp; تم تطويره بواسطة
+        </span>
       </div>
     </div>
 
-    <!-- بنر الترحيب الرئيسي -->
-    <section class="ios-glass rounded-[36px] p-8 sm:p-12 border border-white/20 relative overflow-hidden shadow-2xl text-center space-y-4">
+    <!-- بنر الترحيب الرئيسي (ينزل من الأعلى) -->
+    <section class="ios-glass rounded-[36px] p-8 sm:p-12 border border-white/20 relative overflow-hidden shadow-2xl text-center space-y-4 anim-top delay-200">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-bold">
         <i class="fa-solid fa-atom text-cyan-400"></i>
         المنصة الأكاديمية الشاملة لطلاب الهندسة
@@ -217,11 +336,11 @@
       </p>
     </section>
 
-    <!-- كروت الخدمات الرئيسية (3 كروت متجاورة) -->
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- كروت الخدمات الرئيسية (3 كروت بتأثيرات دخول مختلفة) -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-hidden sm:overflow-visible">
       
-      <!-- 1. كارت تصفح المحاضرات والمسارات -->
-      <a href="تصفح المحاضرات.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden">
+      <!-- 1. كارت تصفح المحاضرات (يدخل من اليمين) -->
+      <a href="تصفح المحاضرات.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden anim-right delay-300">
         <div>
           <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-2xl border border-cyan-400/30 mb-4 group-hover:scale-110 transition duration-300">
             <i class="fa-solid fa-book-open-reader"></i>
@@ -236,8 +355,8 @@
         </span>
       </a> 
 
-      <!-- 2. كارت بنك الأسئلة (في المنتصف) -->
-      <a href="بنك الاسئلة.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden">
+      <!-- 2. كارت بنك الأسئلة (يدخل صاعداً من الأسفل) -->
+      <a href="بنك الاسئلة.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden anim-bottom delay-300">
         <div>
           <div class="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-2xl border border-indigo-400/30 mb-4 group-hover:scale-110 transition duration-300">
             <i class="fa-solid fa-folder-open"></i>
@@ -252,8 +371,8 @@
         </span>
       </a>
 
-      <!-- 3. كارت حساب المعدل التراكمي (GPA) -->
-      <a href="GPA.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden">
+      <!-- 3. كارت حساب المعدل التراكمي (يدخل من اليسار) -->
+      <a href="GPA.html" class="ios-glass-card rounded-[32px] p-6 border border-white/15 flex flex-col justify-between group relative overflow-hidden anim-left delay-300">
         <div>
           <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-2xl border border-emerald-400/30 mb-4 group-hover:scale-110 transition duration-300">
             <i class="fa-solid fa-calculator"></i>
@@ -273,7 +392,7 @@
   </main>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10">
+  <footer class="relative z-10 max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-400 border-t border-white/10 w-full mt-10 anim-bottom delay-400">
     <div class="flex items-center justify-center gap-2 mb-2">
       <i class="fa-solid fa-graduation-cap text-cyan-400 text-base"></i>
       <span class="font-bold text-white">كلية الهندسة • جامعة قنا</span>
